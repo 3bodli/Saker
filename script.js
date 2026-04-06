@@ -3,7 +3,7 @@ document.getElementById('paymentForm').addEventListener('submit', async (e) => {
   const amount = document.getElementById('amount').value;
 
   // إرسال الطلب للـ backend لإنشاء عملية دفع
-  const response = await fetch('https://YOUR_RENDER_BACKEND_URL/create-payment', {
+  const response = await fetch('https://saker2-production.up.railway.app/create-payment', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ amount })
