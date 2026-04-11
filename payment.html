@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>بوابة الدفع الأسطورية 💎</title>
+    <title>بوابة الدفع 💎</title>
     <style>
         * {
             margin: 0;
@@ -32,46 +32,11 @@
             pointer-events: none;
         }
 
-        /* النجوم المتساقطة */
-        @keyframes shootingStar {
-            0% {
-                transform: translateX(0) translateY(0) rotate(45deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateX(-200px) translateY(200px) rotate(45deg);
-                opacity: 0;
-            }
-        }
-
-        .shooting-star {
-            position: fixed;
-            width: 2px;
-            height: 2px;
-            background: white;
-            border-radius: 50%;
-            box-shadow: 0 0 10px rgba(255,255,255,0.8);
-            animation: shootingStar 3s linear infinite;
-            pointer-events: none;
-        }
-
         .container {
             max-width: 550px;
             margin: auto;
             position: relative;
             z-index: 2;
-            animation: floatIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-
-        @keyframes floatIn {
-            0% {
-                opacity: 0;
-                transform: translateY(-50px) scale(0.9);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
         }
 
         /* بطاقة الدفع الرئيسية */
@@ -79,46 +44,7 @@
             background: rgba(255, 255, 255, 0.98);
             border-radius: 48px;
             padding: 35px;
-            box-shadow: 
-                0 30px 60px rgba(0,0,0,0.3),
-                0 0 0 1px rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .payment-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 40px 80px rgba(0,0,0,0.4);
-        }
-
-        /* رأس الصفحة */
-        .hero {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .hero-icon {
-            font-size: 80px;
-            animation: pulse 2s ease infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        h1 {
-            font-size: 32px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin: 15px 0;
-        }
-
-        .subtitle {
-            color: #666;
-            font-size: 14px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
         }
 
         /* شريط المستخدم */
@@ -130,7 +56,6 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
         }
 
         .user-info {
@@ -149,7 +74,6 @@
             align-items: center;
             justify-content: center;
             font-size: 24px;
-            backdrop-filter: blur(5px);
         }
 
         .user-details h3 {
@@ -172,12 +96,41 @@
             cursor: pointer;
             font-weight: bold;
             transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
         }
 
         .logout-btn:hover {
             background: rgba(255,255,255,0.3);
             transform: scale(1.05);
+        }
+
+        /* الهيرو */
+        .hero {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .hero-icon {
+            font-size: 70px;
+            animation: pulse 2s ease infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        h1 {
+            font-size: 28px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 10px 0;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 14px;
         }
 
         /* حقل المبلغ */
@@ -207,7 +160,7 @@
             right: 20px;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 24px;
+            font-size: 28px;
             font-weight: bold;
             color: #667eea;
             pointer-events: none;
@@ -215,8 +168,8 @@
 
         .amount-input {
             width: 100%;
-            padding: 20px 60px 20px 20px;
-            font-size: 48px;
+            padding: 18px 60px 18px 20px;
+            font-size: 40px;
             font-weight: bold;
             text-align: center;
             border: 3px solid #e0e0e0;
@@ -224,25 +177,18 @@
             background: white;
             color: #333;
             transition: all 0.3s ease;
-            font-family: monospace;
         }
 
         .amount-input:focus {
             outline: none;
             border-color: #667eea;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
             transform: scale(1.02);
-        }
-
-        .amount-input::-webkit-inner-spin-button,
-        .amount-input::-webkit-outer-spin-button {
-            opacity: 0.5;
         }
 
         /* أزرار سريعة للمبالغ */
         .quick-amounts {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             justify-content: center;
             margin-top: 20px;
             flex-wrap: wrap;
@@ -251,7 +197,7 @@
         .quick-btn {
             background: white;
             border: 2px solid #e0e0e0;
-            padding: 8px 20px;
+            padding: 8px 18px;
             border-radius: 40px;
             cursor: pointer;
             font-weight: bold;
@@ -266,7 +212,7 @@
             transform: translateY(-2px);
         }
 
-        /* خيارات الدفع */
+        /* طرق الدفع */
         .payment-methods {
             margin-bottom: 25px;
         }
@@ -283,7 +229,7 @@
 
         .methods-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
             gap: 12px;
         }
 
@@ -291,17 +237,15 @@
             background: white;
             border: 2px solid #e0e0e0;
             border-radius: 20px;
-            padding: 15px;
+            padding: 12px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            position: relative;
         }
 
         .method-item:hover {
             transform: translateY(-3px);
             border-color: #667eea;
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
         }
 
         .method-item.selected {
@@ -315,58 +259,37 @@
         }
 
         .method-icon {
-            font-size: 32px;
-            margin-bottom: 8px;
-            transition: all 0.3s ease;
+            font-size: 28px;
+            margin-bottom: 5px;
         }
 
         .method-name {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: bold;
         }
 
         /* زر الدفع */
         .pay-button {
             width: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
             color: white;
             border: none;
-            padding: 20px;
+            padding: 18px;
             border-radius: 60px;
             font-size: 22px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-top: 20px;
-            position: relative;
-            overflow: hidden;
+            margin-top: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 12px;
         }
 
-        .pay-button::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.3);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-
-        .pay-button:hover::before {
-            width: 300px;
-            height: 300px;
-        }
-
         .pay-button:hover {
             transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 15px 30px rgba(40, 167, 69, 0.4);
         }
 
         .pay-button:active {
@@ -416,67 +339,33 @@
             }
         }
 
-        /* تأثير تحميل */
         .loading {
             opacity: 0.7;
             pointer-events: none;
         }
 
-        /* تنسيق متجاوب */
         @media (max-width: 600px) {
             .payment-card {
                 padding: 25px;
             }
-            
             .amount-input {
-                font-size: 32px;
+                font-size: 28px;
                 padding: 15px 50px 15px 15px;
             }
-            
             .methods-grid {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(3, 1fr);
             }
-            
             h1 {
-                font-size: 24px;
+                font-size: 22px;
             }
-            
-            .hero-icon {
-                font-size: 60px;
-            }
-        }
-
-        /* شريط التقدم */
-        .progress-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 0%;
-            height: 3px;
-            background: linear-gradient(90deg, #667eea, #764ba2, #667eea);
-            transition: width 0.3s ease;
-            z-index: 9999;
-            box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
-        }
-
-        /* تأثيرات إضافية */
-        .glow {
-            animation: glow 2s ease infinite;
-        }
-
-        @keyframes glow {
-            0%, 100% { text-shadow: 0 0 5px rgba(102, 126, 234, 0.5); }
-            50% { text-shadow: 0 0 20px rgba(102, 126, 234, 0.8); }
         }
     </style>
 </head>
 <body>
-    <div class="progress-bar" id="progressBar"></div>
-    
     <div class="container">
         <div class="payment-card">
             <!-- شريط المستخدم -->
-            <div class="user-bar" id="userBar">
+            <div class="user-bar">
                 <div class="user-info">
                     <div class="user-avatar">👤</div>
                     <div class="user-details">
@@ -489,9 +378,9 @@
 
             <!-- الهيرو -->
             <div class="hero">
-                <div class="hero-icon glow">💎</div>
-                <h1>بوابة الدفع الذهبية</h1>
-                <p class="subtitle">ادفع بكل سهولة وأمان مع أحدث طرق الدفع</p>
+                <div class="hero-icon">💎</div>
+                <h1>بوابة الدفع</h1>
+                <p class="subtitle">ادفع بكل سهولة وأمان</p>
             </div>
 
             <!-- حقل المبلغ -->
@@ -499,10 +388,9 @@
                 <span class="amount-label">💰 المبلغ المطلوب</span>
                 <div class="amount-input-wrapper">
                     <span class="currency-symbol">$</span>
-                    <input type="number" id="amount" class="amount-input" placeholder="0" value="50" step="1" min="1">
+                    <input type="number" id="amount" class="amount-input" placeholder="0" step="1" min="1">
                 </div>
                 
-                <!-- أزرار سريعة للمبالغ -->
                 <div class="quick-amounts">
                     <div class="quick-btn" onclick="setAmount(10)">10$</div>
                     <div class="quick-btn" onclick="setAmount(25)">25$</div>
@@ -519,35 +407,35 @@
                     <span>💳</span>
                     <span>اختر طريقة الدفع</span>
                 </div>
-                <div class="methods-grid" id="methodsGrid">
+                <div class="methods-grid">
                     <div class="method-item selected" data-currency="btc" onclick="selectMethod(this, 'btc')">
                         <div class="method-icon">₿</div>
-                        <div class="method-name">بيتكوين BTC</div>
+                        <div class="method-name">بيتكوين</div>
                     </div>
                     <div class="method-item" data-currency="eth" onclick="selectMethod(this, 'eth')">
                         <div class="method-icon">Ξ</div>
-                        <div class="method-name">إيثريوم ETH</div>
+                        <div class="method-name">إيثريوم</div>
                     </div>
                     <div class="method-item" data-currency="usdttrc20" onclick="selectMethod(this, 'usdttrc20')">
                         <div class="method-icon">₮</div>
-                        <div class="method-name">USDT (TRC20)</div>
+                        <div class="method-name">USDT</div>
                     </div>
                     <div class="method-item" data-currency="ltc" onclick="selectMethod(this, 'ltc')">
                         <div class="method-icon">Ł</div>
-                        <div class="method-name">لايتكوين LTC</div>
+                        <div class="method-name">لايتكوين</div>
                     </div>
                     <div class="method-item" data-currency="doge" onclick="selectMethod(this, 'doge')">
                         <div class="method-icon">Ð</div>
-                        <div class="method-name">دوجكوين DOGE</div>
+                        <div class="method-name">دوجكوين</div>
                     </div>
                     <div class="method-item" data-currency="xrp" onclick="selectMethod(this, 'xrp')">
                         <div class="method-icon">✕</div>
-                        <div class="method-name">ريبل XRP</div>
+                        <div class="method-name">ريبل</div>
                     </div>
                 </div>
             </div>
 
-            <!-- زر الدفع الأسطوري -->
+            <!-- زر الدفع -->
             <button class="pay-button" onclick="createPayment()">
                 <span>💸</span>
                 <span>إتمام الدفع الآن</span>
@@ -560,7 +448,7 @@
     </div>
 
     <script>
-        // ========== إعدادات ==========
+        // ========== رابط السيرفر ==========
         const API_URL = 'https://saker2-production.up.railway.app';
         let selectedCurrency = 'btc';
         
@@ -572,24 +460,13 @@
             window.location.href = 'login.html';
         }
         
-        // عرض اسم المستخدم
         document.getElementById('usernameDisplay').innerHTML = `👋 مرحباً ${username || 'مستخدم'}`;
-        
-        // ========== شريط التقدم عند التمرير ==========
-        window.addEventListener('scroll', () => {
-            const winScroll = document.documentElement.scrollTop;
-            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (winScroll / height) * 100;
-            document.getElementById('progressBar').style.width = scrolled + '%';
-        });
         
         // ========== تحديد طريقة الدفع ==========
         function selectMethod(element, currency) {
-            // إزالة التحديد من جميع الخيارات
             document.querySelectorAll('.method-item').forEach(item => {
                 item.classList.remove('selected');
             });
-            // إضافة التحديد للعنصر الحالي
             element.classList.add('selected');
             selectedCurrency = currency;
         }
@@ -597,8 +474,6 @@
         // ========== تعيين المبلغ بسرعة ==========
         function setAmount(value) {
             document.getElementById('amount').value = value;
-            document.getElementById('amount').focus();
-            // تأثير اهتزاز
             const input = document.getElementById('amount');
             input.style.transform = 'scale(1.05)';
             setTimeout(() => {
@@ -612,30 +487,18 @@
             const payBtn = document.querySelector('.pay-button');
             const messageDiv = document.getElementById('message');
             
-            // إخفاء الرسائل السابقة
             messageDiv.classList.remove('show');
             
-            // التحقق من صحة المبلغ
             if (!amount || amount < 1) {
                 showMessage('❌ الرجاء إدخال مبلغ صحيح (أكبر من 0)', 'error');
                 return;
             }
             
-            if (amount > 100000) {
-                showMessage('⚠️ المبلغ كبير جداً. الحد الأقصى هو 100,000 دولار', 'error');
-                return;
-            }
-            
-            // إظهار حالة التحميل
             const originalText = payBtn.innerHTML;
-            payBtn.innerHTML = '<span>⏳</span><span>جاري إنشاء طلب الدفع...</span><span>🔄</span>';
+            payBtn.innerHTML = '⏳ جاري إنشاء طلب الدفع...';
             payBtn.classList.add('loading');
             
-            // تحديث شريط التقدم وهمي
-            updateProgressBar(0);
-            
             try {
-                // محاولة الاتصال بالسيرفر
                 const response = await fetch(`${API_URL}/create-payment`, {
                     method: 'POST',
                     headers: {
@@ -648,34 +511,23 @@
                     })
                 });
                 
-                updateProgressBar(50);
                 const data = await response.json();
-                updateProgressBar(100);
+                console.log('Response:', data);
                 
                 if (data.success && data.paymentUrl) {
                     showMessage('✅ تم إنشاء طلب الدفع بنجاح! جاري تحويلك إلى بوابة الدفع...', 'success');
                     
-                    // تأثير احتفالي
-                    celebrate();
-                    
-                    // فتح رابط الدفع بعد 1.5 ثانية
                     setTimeout(() => {
                         window.open(data.paymentUrl, '_blank');
-                        updateProgressBar(0);
                     }, 1500);
-                    
-                    // تسجيل عملية الدفع
-                    savePaymentToHistory(amount, selectedCurrency);
                     
                 } else {
                     showMessage('❌ ' + (data.error || 'حدث خطأ أثناء إنشاء طلب الدفع'), 'error');
-                    updateProgressBar(0);
                 }
                 
             } catch (error) {
                 console.error('Error:', error);
-                showMessage('❌ فشل الاتصال بالخادم. تأكد من اتصالك بالإنترنت', 'error');
-                updateProgressBar(0);
+                showMessage('❌ فشل الاتصال بالخادم: ' + error.message, 'error');
             } finally {
                 setTimeout(() => {
                     payBtn.innerHTML = originalText;
@@ -684,159 +536,36 @@
             }
         }
         
-        // ========== حفظ سجل الدفع محلياً ==========
-        function savePaymentToHistory(amount, currency) {
-            let history = JSON.parse(localStorage.getItem('paymentHistory') || '[]');
-            history.unshift({
-                amount: amount,
-                currency: currency,
-                date: new Date().toLocaleString('ar-EG'),
-                status: 'pending'
-            });
-            // الاحتفاظ بآخر 20 عملية فقط
-            if (history.length > 20) history.pop();
-            localStorage.setItem('paymentHistory', JSON.stringify(history));
-        }
-        
         // ========== عرض الرسائل ==========
         function showMessage(text, type) {
             const messageDiv = document.getElementById('message');
             messageDiv.innerHTML = text;
             messageDiv.className = `message show ${type}`;
             
-            // اهتزاز للرسالة
-            messageDiv.style.animation = 'none';
             setTimeout(() => {
-                messageDiv.style.animation = 'slideIn 0.4s ease';
-            }, 10);
-            
-            // إخفاء الرسالة بعد 5 ثواني
-            setTimeout(() => {
-                if (messageDiv.classList.contains('show')) {
-                    messageDiv.classList.remove('show');
-                }
+                messageDiv.classList.remove('show');
             }, 5000);
         }
-        
-        // ========== تحديث شريط التقدم ==========
-        function updateProgressBar(percent) {
-            const progressBar = document.getElementById('progressBar');
-            progressBar.style.width = percent + '%';
-            if (percent === 100) {
-                setTimeout(() => {
-                    progressBar.style.width = '0%';
-                }, 1000);
-            }
-        }
-        
-        // ========== تأثير احتفالي ==========
-        function celebrate() {
-            // إنشاء جسيمات
-            for (let i = 0; i < 30; i++) {
-                createParticle();
-            }
-            
-            // تغيير لون الزر مؤقتاً
-            const btn = document.querySelector('.pay-button');
-            btn.style.background = 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)';
-            setTimeout(() => {
-                btn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
-            }, 1000);
-        }
-        
-        // ========== إنشاء جسيمات ==========
-        function createParticle() {
-            const particle = document.createElement('div');
-            particle.innerHTML = ['💰', '💎', '✨', '⭐', '💵'][Math.floor(Math.random() * 5)];
-            particle.style.position = 'fixed';
-            particle.style.left = Math.random() * window.innerWidth + 'px';
-            particle.style.top = window.innerHeight - 100 + 'px';
-            particle.style.fontSize = (Math.random() * 20 + 15) + 'px';
-            particle.style.pointerEvents = 'none';
-            particle.style.zIndex = '9999';
-            particle.style.animation = 'floatUp 1s ease-out forwards';
-            document.body.appendChild(particle);
-            
-            setTimeout(() => {
-                particle.remove();
-            }, 1000);
-        }
-        
-        // إضافة تأثير الطفو للجسيمات
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes floatUp {
-                0% {
-                    opacity: 1;
-                    transform: translateY(0) rotate(0deg);
-                }
-                100% {
-                    opacity: 0;
-                    transform: translateY(-200px) rotate(360deg);
-                }
-            }
-        `;
-        document.head.appendChild(style);
         
         // ========== تسجيل الخروج ==========
         function logout() {
             localStorage.removeItem('token');
             localStorage.removeItem('username');
             localStorage.removeItem('isLoggedIn');
-            localStorage.removeItem('loginTime');
             window.location.href = 'login.html';
         }
         
-        // ========== إنشاء نجوم متساقطة ==========
-        function createShootingStars() {
-            for (let i = 0; i < 5; i++) {
-                const star = document.createElement('div');
-                star.className = 'shooting-star';
-                star.style.top = Math.random() * window.innerHeight + 'px';
-                star.style.left = Math.random() * window.innerWidth + 'px';
-                star.style.animationDelay = Math.random() * 5 + 's';
-                document.body.appendChild(star);
-                
-                setTimeout(() => {
-                    star.remove();
-                }, 3000);
-            }
-        }
-        
-        setInterval(createShootingStars, 8000);
-        
-        // ========== دعم الضغط على Enter ==========
+        // ========== دعم Enter ==========
         document.getElementById('amount').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 createPayment();
             }
         });
         
-        // ========== تأثيرات إضافية على الحقل ==========
-        const amountInput = document.getElementById('amount');
-        amountInput.addEventListener('focus', () => {
-            amountInput.style.transform = 'scale(1.02)';
-        });
-        amountInput.addEventListener('blur', () => {
-            amountInput.style.transform = 'scale(1)';
-        });
-        
-        // عرض ترحيب
+        // ترحيب
         setTimeout(() => {
             showMessage(`✨ مرحباً ${username || 'عزيزي'}! اختر المبلغ وطريقة الدفع المناسبة`, 'info');
         }, 1000);
-        
-        // ========== إحصائيات فورية ==========
-        function updateStats() {
-            const history = JSON.parse(localStorage.getItem('paymentHistory') || '[]');
-            const totalPayments = history.length;
-            const totalAmount = history.reduce((sum, p) => sum + parseFloat(p.amount), 0);
-            
-            // يمكن عرض الإحصائيات في مكان ما إذا أردت
-            console.log(`📊 إحصائيات: ${totalPayments} عملية بمبلغ إجمالي ${totalAmount}$`);
-        }
-        
-        updateStats();
     </script>
 </body>
 </html>
