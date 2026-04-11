@@ -6,7 +6,6 @@
     <title>تسجيل الدخول - بوابة الدفع</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
         body {
             font-family: 'Tahoma', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -16,356 +15,70 @@
             align-items: center;
             direction: rtl;
             padding: 20px;
-            position: relative;
-            overflow-x: hidden;
         }
-        
-        /* خلفية متحركة */
-        body::before {
-            content: '';
-            position: absolute;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 1%, transparent 1%);
-            background-size: 50px 50px;
-            animation: moveBackground 20s linear infinite;
-            pointer-events: none;
-        }
-        
-        @keyframes moveBackground {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(100px, 100px); }
-        }
-        
         .container {
-            background: rgba(255, 255, 255, 0.98);
-            border-radius: 30px;
-            box-shadow: 0 30px 80px rgba(0,0,0,0.4);
-            width: 450px;
-            padding: 45px;
-            position: relative;
-            z-index: 1;
-            backdrop-filter: blur(10px);
-            animation: fadeInUp 0.6s ease-out;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 400px;
+            padding: 40px;
         }
-        
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .icon {
-            text-align: center;
-            font-size: 70px;
-            margin-bottom: 20px;
-            animation: bounce 2s ease infinite;
-        }
-        
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        
-        h2 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 30px;
-            font-size: 28px;
-            font-weight: bold;
-        }
-        
+        .icon { text-align: center; font-size: 60px; margin-bottom: 20px; }
+        h2 { text-align: center; color: #333; margin-bottom: 30px; }
         .tabs {
             display: flex;
-            margin-bottom: 35px;
+            margin-bottom: 30px;
             border-bottom: 2px solid #eee;
-            gap: 10px;
         }
-        
         .tab {
             flex: 1;
             text-align: center;
-            padding: 12px;
+            padding: 10px;
             cursor: pointer;
             font-weight: bold;
             color: #999;
-            transition: all 0.3s ease;
-            border-radius: 10px 10px 0 0;
-            position: relative;
+            transition: 0.3s;
         }
-        
-        .tab:hover {
-            color: #667eea;
-            background: rgba(102, 126, 234, 0.05);
-        }
-        
         .tab.active {
             color: #667eea;
-            background: linear-gradient(0deg, rgba(102, 126, 234, 0.1) 0%, transparent 100%);
+            border-bottom: 2px solid #667eea;
         }
-        
-        .tab.active::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: #667eea;
-            border-radius: 3px;
-        }
-        
-        .form {
-            display: none;
-            animation: fadeIn 0.4s ease;
-        }
-        
-        .form.active {
-            display: block;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateX(10px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-        
-        .input-group {
-            position: relative;
-            margin-bottom: 20px;
-        }
-        
+        .form { display: none; }
+        .form.active { display: block; }
         input {
             width: 100%;
-            padding: 14px 15px;
+            padding: 12px;
+            margin: 10px 0;
             border: 2px solid #e0e0e0;
-            border-radius: 12px;
+            border-radius: 10px;
             font-size: 16px;
-            transition: all 0.3s ease;
-            font-family: inherit;
         }
-        
-        input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-            transform: translateY(-2px);
-        }
-        
-        input:hover {
-            border-color: #667eea;
-        }
-        
+        input:focus { outline: none; border-color: #667eea; }
         button {
             width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 12px;
+            background: #667eea;
             color: white;
             border: none;
-            border-radius: 12px;
+            border-radius: 10px;
             font-size: 18px;
             font-weight: bold;
             cursor: pointer;
-            margin-top: 10px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        button::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.3);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-        
-        button:hover::before {
-            width: 300px;
-            height: 300px;
-        }
-        
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-        }
-        
-        button:active {
-            transform: translateY(0);
-        }
-        
-        .message {
             margin-top: 20px;
-            padding: 12px;
-            border-radius: 12px;
+        }
+        button:hover { background: #5a67d8; }
+        .message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 8px;
             text-align: center;
             font-size: 14px;
             display: none;
-            animation: slideIn 0.3s ease;
         }
-        
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .message.show {
-            display: block;
-        }
-        
-        .error {
-            background: linear-gradient(135deg, #fee 0%, #fdd 100%);
-            color: #c33;
-            border-right: 4px solid #c33;
-        }
-        
-        .success {
-            background: linear-gradient(135deg, #efe 0%, #dfd 100%);
-            color: #2e7d32;
-            border-right: 4px solid #2e7d32;
-        }
-        
-        .info {
-            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-            color: #1976d2;
-            border-right: 4px solid #1976d2;
-        }
-        
-        .loading {
-            opacity: 0.7;
-            pointer-events: none;
-            position: relative;
-        }
-        
-        .loading::after {
-            content: '⏳';
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            from { transform: translateY(-50%) rotate(0deg); }
-            to { transform: translateY(-50%) rotate(360deg); }
-        }
-        
-        .password-strength {
-            margin-top: 5px;
-            font-size: 12px;
-            color: #666;
-        }
-        
-        .strength-bar {
-            height: 3px;
-            background: #eee;
-            border-radius: 3px;
-            margin-top: 8px;
-            overflow: hidden;
-        }
-        
-        .strength-fill {
-            height: 100%;
-            width: 0;
-            transition: width 0.3s ease;
-            background: #f44336;
-        }
-        
-        /* تنسيق للشاشات الصغيرة */
-        @media (max-width: 480px) {
-            .container {
-                width: 95%;
-                padding: 30px 20px;
-            }
-            
-            h2 {
-                font-size: 24px;
-            }
-            
-            .icon {
-                font-size: 50px;
-            }
-        }
-        
-        /* تأثير نبض للزر */
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-        }
-        
-        button:active {
-            animation: pulse 0.3s ease;
-        }
-        
-        /* تنسيق رابط نسيت كلمة المرور */
-        .forgot-password {
-            text-align: center;
-            margin-top: 15px;
-        }
-        
-        .forgot-password a {
-            color: #667eea;
-            text-decoration: none;
-            font-size: 13px;
-            transition: color 0.3s;
-        }
-        
-        .forgot-password a:hover {
-            color: #764ba2;
-            text-decoration: underline;
-        }
-        
-        /* أيقونات داخل الحقول */
-        .input-group {
-            position: relative;
-        }
-        
-        .input-icon {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #999;
-            font-size: 18px;
-            pointer-events: none;
-        }
-        
-        input[type="password"] {
-            padding-left: 45px;
-        }
-        
-        /* زر إظهار/إخفاء كلمة المرور */
-        .toggle-password {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: #999;
-            font-size: 18px;
-            user-select: none;
-            z-index: 2;
-        }
-        
-        .toggle-password:hover {
-            color: #667eea;
-        }
+        .message.show { display: block; }
+        .error { background: #fee; color: #c33; }
+        .success { background: #efe; color: #3c3; }
+        .loading { opacity: 0.6; pointer-events: none; }
     </style>
 </head>
 <body>
@@ -374,57 +87,30 @@
         <h2>بوابة الدفع</h2>
         
         <div class="tabs">
-            <div class="tab active" onclick="switchTab('login')">🔐 تسجيل دخول</div>
-            <div class="tab" onclick="switchTab('register')">📝 حساب جديد</div>
+            <div class="tab active" onclick="switchTab('login')">تسجيل دخول</div>
+            <div class="tab" onclick="switchTab('register')">حساب جديد</div>
         </div>
 
-        <!-- نموذج تسجيل الدخول -->
         <div id="loginForm" class="form active">
-            <div class="input-group">
-                <input type="text" id="loginUsername" placeholder="👤 اسم المستخدم" autocomplete="off">
-            </div>
-            <div class="input-group">
-                <input type="password" id="loginPassword" placeholder="🔒 كلمة المرور">
-                <span class="toggle-password" onclick="togglePassword('loginPassword')">👁️</span>
-            </div>
-            <button onclick="login()">🚀 دخول</button>
-            <div class="forgot-password">
-                <a href="#" onclick="showForgotPassword()">نسيت كلمة المرور؟</a>
-            </div>
+            <input type="text" id="loginUsername" placeholder="اسم المستخدم">
+            <input type="password" id="loginPassword" placeholder="كلمة المرور">
+            <button onclick="login()">دخول</button>
             <div id="loginMessage" class="message"></div>
         </div>
 
-        <!-- نموذج تسجيل جديد -->
         <div id="registerForm" class="form">
-            <div class="input-group">
-                <input type="text" id="regUsername" placeholder="👤 اسم المستخدم" autocomplete="off">
-            </div>
-            <div class="input-group">
-                <input type="password" id="regPassword" placeholder="🔒 كلمة المرور" onkeyup="checkPasswordStrength()">
-                <span class="toggle-password" onclick="togglePassword('regPassword')">👁️</span>
-                <div class="password-strength" id="strengthText">قوة كلمة المرور: ضعيفة</div>
-                <div class="strength-bar">
-                    <div class="strength-fill" id="strengthFill"></div>
-                </div>
-            </div>
-            <div class="input-group">
-                <input type="password" id="regConfirm" placeholder="✓ تأكيد كلمة المرور">
-                <span class="toggle-password" onclick="togglePassword('regConfirm')">👁️</span>
-            </div>
-            <button onclick="register()">✨ إنشاء حساب</button>
+            <input type="text" id="regUsername" placeholder="اسم المستخدم">
+            <input type="password" id="regPassword" placeholder="كلمة المرور">
+            <input type="password" id="regConfirm" placeholder="تأكيد كلمة المرور">
+            <button onclick="register()">إنشاء حساب</button>
             <div id="registerMessage" class="message"></div>
         </div>
     </div>
 
     <script>
-        // رابط السيرفر على Railway
+        // رابط السيرفر - غير هذا حسب رابط Railway
         const API_URL = 'https://saker2-production.up.railway.app';
         
-        // متغير لتخزين آخر طلب
-        let lastRequestTime = 0;
-        const REQUEST_DELAY = 2000; // 2 ثانية بين الطلبات
-        
-        // تبديل التبويبات
         function switchTab(tab) {
             document.querySelectorAll('.form').forEach(f => f.classList.remove('active'));
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -432,134 +118,25 @@
             if (tab === 'login') {
                 document.getElementById('loginForm').classList.add('active');
                 document.querySelector('.tab').classList.add('active');
-                // تنظيف الحقول
-                document.getElementById('loginUsername').value = '';
-                document.getElementById('loginPassword').value = '';
-                hideMessage('loginMessage');
             } else {
                 document.getElementById('registerForm').classList.add('active');
                 document.querySelectorAll('.tab')[1].classList.add('active');
-                // تنظيف الحقول
-                document.getElementById('regUsername').value = '';
-                document.getElementById('regPassword').value = '';
-                document.getElementById('regConfirm').value = '';
-                hideMessage('registerMessage');
             }
         }
         
-        // إخفاء الرسالة
-        function hideMessage(elementId) {
-            const msgDiv = document.getElementById(elementId);
-            msgDiv.classList.remove('show');
-        }
-        
-        // إظهار/إخفاء كلمة المرور
-        function togglePassword(fieldId) {
-            const field = document.getElementById(fieldId);
-            const toggle = field.nextElementSibling;
-            if (field.type === 'password') {
-                field.type = 'text';
-                toggle.innerHTML = '🙈';
-            } else {
-                field.type = 'password';
-                toggle.innerHTML = '👁️';
-            }
-        }
-        
-        // التحقق من قوة كلمة المرور
-        function checkPasswordStrength() {
-            const password = document.getElementById('regPassword').value;
-            const strengthText = document.getElementById('strengthText');
-            const strengthFill = document.getElementById('strengthFill');
-            
-            let strength = 0;
-            let message = '';
-            let color = '';
-            
-            if (password.length > 0) {
-                if (password.length >= 8) strength++;
-                if (password.match(/[a-z]/)) strength++;
-                if (password.match(/[A-Z]/)) strength++;
-                if (password.match(/[0-9]/)) strength++;
-                if (password.match(/[^a-zA-Z0-9]/)) strength++;
-            }
-            
-            switch(strength) {
-                case 0:
-                case 1:
-                    message = 'ضعيفة جداً';
-                    color = '#f44336';
-                    strengthFill.style.width = '20%';
-                    break;
-                case 2:
-                    message = 'ضعيفة';
-                    color = '#ff9800';
-                    strengthFill.style.width = '40%';
-                    break;
-                case 3:
-                    message = 'متوسطة';
-                    color = '#ffc107';
-                    strengthFill.style.width = '60%';
-                    break;
-                case 4:
-                    message = 'قوية';
-                    color = '#4caf50';
-                    strengthFill.style.width = '80%';
-                    break;
-                case 5:
-                    message = 'قوية جداً';
-                    color = '#2e7d32';
-                    strengthFill.style.width = '100%';
-                    break;
-                default:
-                    message = 'ضعيفة';
-                    color = '#f44336';
-                    strengthFill.style.width = '20%';
-            }
-            
-            if (password.length === 0) {
-                message = 'أدخل كلمة المرور';
-                strengthFill.style.width = '0%';
-            }
-            
-            strengthText.textContent = `🔐 قوة كلمة المرور: ${message}`;
-            strengthFill.style.background = color;
-        }
-        
-        // دالة تسجيل الدخول مع منع التكرار
         async function login() {
             const username = document.getElementById('loginUsername').value.trim();
             const password = document.getElementById('loginPassword').value;
             const msgDiv = document.getElementById('loginMessage');
             const btn = event.target;
             
-            // منع الطلبات المتكررة
-            const now = Date.now();
-            if (now - lastRequestTime < REQUEST_DELAY) {
-                showMessage(msgDiv, '⏳ الرجاء الانتظار قليلاً قبل المحاولة مرة أخرى', 'info');
-                return;
-            }
-            lastRequestTime = now;
-            
-            // التحقق من المدخلات
             if (!username || !password) {
-                showMessage(msgDiv, '❌ الرجاء إدخال اسم المستخدم وكلمة المرور', 'error');
+                showMessage(msgDiv, '❌ الرجاء إدخال جميع البيانات', 'error');
                 return;
             }
             
-            if (username.length < 3) {
-                showMessage(msgDiv, '❌ اسم المستخدم يجب أن يكون 3 أحرف على الأقل', 'error');
-                return;
-            }
-            
-            if (password.length < 4) {
-                showMessage(msgDiv, '❌ كلمة المرور قصيرة جداً (4 أحرف على الأقل)', 'error');
-                return;
-            }
-            
-            // تعطيل الزر أثناء التحميل
             const originalText = btn.innerHTML;
-            btn.innerHTML = '⏳ جاري التحقق...';
+            btn.innerHTML = '⏳ جاري...';
             btn.classList.add('loading');
             
             try {
@@ -575,26 +152,23 @@
                     localStorage.setItem('token', data.token);
                     localStorage.setItem('username', data.username);
                     localStorage.setItem('isLoggedIn', 'true');
-                    localStorage.setItem('loginTime', Date.now());
                     
-                    showMessage(msgDiv, '✅ تم تسجيل الدخول بنجاح... جاري التحويل إلى بوابة الدفع', 'success');
-                    
+                    showMessage(msgDiv, '✅ تم تسجيل الدخول... جاري التحويل', 'success');
                     setTimeout(() => {
                         window.location.href = 'payment.html';
-                    }, 1200);
+                    }, 1000);
                 } else {
-                    showMessage(msgDiv, '❌ ' + (data.error || 'بيانات الدخول غير صحيحة'), 'error');
+                    showMessage(msgDiv, '❌ ' + data.error, 'error');
                 }
             } catch (error) {
-                console.error('Login error:', error);
-                showMessage(msgDiv, '❌ خطأ في الاتصال بالسيرفر. تأكد من اتصالك بالإنترنت', 'error');
+                console.error('Error:', error);
+                showMessage(msgDiv, '❌ خطأ في الاتصال: ' + error.message, 'error');
             } finally {
                 btn.innerHTML = originalText;
                 btn.classList.remove('loading');
             }
         }
         
-        // دالة التسجيل
         async function register() {
             const username = document.getElementById('regUsername').value.trim();
             const password = document.getElementById('regPassword').value;
@@ -602,27 +176,8 @@
             const msgDiv = document.getElementById('registerMessage');
             const btn = event.target;
             
-            // منع الطلبات المتكررة
-            const now = Date.now();
-            if (now - lastRequestTime < REQUEST_DELAY) {
-                showMessage(msgDiv, '⏳ الرجاء الانتظار قليلاً قبل المحاولة مرة أخرى', 'info');
-                return;
-            }
-            lastRequestTime = now;
-            
-            // التحقق من صحة البيانات
-            if (!username || !password || !confirm) {
-                showMessage(msgDiv, '❌ الرجاء تعبئة جميع الحقول', 'error');
-                return;
-            }
-            
-            if (username.length < 3) {
-                showMessage(msgDiv, '❌ اسم المستخدم يجب أن يكون 3 أحرف على الأقل', 'error');
-                return;
-            }
-            
-            if (password.length < 4) {
-                showMessage(msgDiv, '❌ كلمة المرور قصيرة جداً (4 أحرف على الأقل)', 'error');
+            if (!username || !password) {
+                showMessage(msgDiv, '❌ الرجاء إدخال جميع البيانات', 'error');
                 return;
             }
             
@@ -631,9 +186,8 @@
                 return;
             }
             
-            // تعطيل الزر أثناء التحميل
             const originalText = btn.innerHTML;
-            btn.innerHTML = '⏳ جاري إنشاء الحساب...';
+            btn.innerHTML = '⏳ جاري...';
             btn.classList.add('loading');
             
             try {
@@ -646,87 +200,31 @@
                 const data = await response.json();
                 
                 if (data.success) {
-                    showMessage(msgDiv, '✅ ' + data.message + '! يمكنك الآن تسجيل الدخول', 'success');
-                    
-                    // تنظيف الحقول
-                    document.getElementById('regUsername').value = '';
-                    document.getElementById('regPassword').value = '';
-                    document.getElementById('regConfirm').value = '';
-                    
-                    // التحويل إلى تبويب تسجيل الدخول بعد 2 ثانية
-                    setTimeout(() => {
-                        switchTab('login');
-                        showMessage(document.getElementById('loginMessage'), '✨ تم إنشاء الحساب بنجاح! يمكنك تسجيل الدخول الآن', 'success');
-                    }, 2000);
+                    showMessage(msgDiv, '✅ ' + data.message, 'success');
+                    setTimeout(() => switchTab('login'), 1500);
                 } else {
-                    showMessage(msgDiv, '❌ ' + (data.error || 'حدث خطأ أثناء إنشاء الحساب'), 'error');
+                    showMessage(msgDiv, '❌ ' + data.error, 'error');
                 }
             } catch (error) {
-                console.error('Register error:', error);
-                showMessage(msgDiv, '❌ خطأ في الاتصال بالسيرفر. تأكد من اتصالك بالإنترنت', 'error');
+                console.error('Error:', error);
+                showMessage(msgDiv, '❌ خطأ: ' + error.message, 'error');
             } finally {
                 btn.innerHTML = originalText;
                 btn.classList.remove('loading');
             }
         }
         
-        // دالة نسيت كلمة المرور
-        function showForgotPassword() {
-            const msgDiv = document.getElementById('loginMessage');
-            showMessage(msgDiv, '📧 الرجاء التواصل مع الدعم الفني على support@example.com', 'info');
-        }
-        
-        // عرض الرسائل
         function showMessage(element, text, type) {
             element.innerHTML = text;
             element.className = `message show ${type}`;
-            
-            // إخفاء الرسالة بعد 5 ثواني
             setTimeout(() => {
-                if (element.classList.contains('show')) {
-                    element.classList.remove('show');
-                }
-            }, 5000);
+                element.classList.remove('show');
+            }, 3000);
         }
         
-        // التحقق من حالة تسجيل الدخول
         if (localStorage.getItem('isLoggedIn') === 'true') {
-            const loginTime = localStorage.getItem('loginTime');
-            const isExpired = loginTime && (Date.now() - loginTime > 7 * 24 * 60 * 60 * 1000); // 7 أيام
-            
-            if (!isExpired) {
-                window.location.href = 'payment.html';
-            } else {
-                // انتهت صلاحية الجلسة
-                localStorage.removeItem('isLoggedIn');
-                localStorage.removeItem('token');
-                localStorage.removeItem('username');
-                localStorage.removeItem('loginTime');
-            }
+            window.location.href = 'payment.html';
         }
-        
-        // دعم الضغط على Enter
-        document.getElementById('loginPassword').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                login();
-            }
-        });
-        
-        document.getElementById('regConfirm').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                register();
-            }
-        });
-        
-        // تأثيرات إضافية
-        document.querySelectorAll('input').forEach(input => {
-            input.addEventListener('focus', function() {
-                this.parentElement.style.transform = 'scale(1.01)';
-            });
-            input.addEventListener('blur', function() {
-                this.parentElement.style.transform = 'scale(1)';
-            });
-        });
     </script>
 </body>
 </html>
