@@ -2,503 +2,145 @@
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>بوابة الدفع 💎</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صفحة الدفع</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Cairo', 'Tahoma', sans-serif;
-            background: linear-gradient(145deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            font-family: 'Tahoma', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            direction: rtl;
             padding: 20px;
-            position: relative;
-            overflow-x: hidden;
         }
-
-        /* جسيمات متحركة في الخلفية */
-        body::before {
-            content: '';
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.2) 0%, transparent 50%);
-            pointer-events: none;
-        }
-
         .container {
-            max-width: 550px;
-            margin: auto;
-            position: relative;
-            z-index: 2;
-        }
-
-        /* بطاقة الدفع الرئيسية */
-        .payment-card {
-            background: rgba(255, 255, 255, 0.98);
-            border-radius: 48px;
-            padding: 35px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
-        }
-
-        /* شريط المستخدم */
-        .user-bar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 60px;
-            padding: 12px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: white;
-        }
-
-        .user-avatar {
-            width: 45px;
-            height: 45px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-        }
-
-        .user-details h3 {
-            font-size: 16px;
-            margin: 0;
-        }
-
-        .user-details p {
-            font-size: 12px;
-            opacity: 0.8;
-            margin: 0;
-        }
-
-        .logout-btn {
-            background: rgba(255,255,255,0.2);
-            border: 1px solid rgba(255,255,255,0.3);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 40px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-
-        .logout-btn:hover {
-            background: rgba(255,255,255,0.3);
-            transform: scale(1.05);
-        }
-
-        /* الهيرو */
-        .hero {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .hero-icon {
-            font-size: 70px;
-            animation: pulse 2s ease infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        h1 {
-            font-size: 28px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin: 10px 0;
-        }
-
-        .subtitle {
-            color: #666;
-            font-size: 14px;
-        }
-
-        /* حقل المبلغ */
-        .amount-section {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            border-radius: 30px;
-            padding: 25px;
-            margin-bottom: 25px;
-            text-align: center;
-        }
-
-        .amount-label {
-            font-size: 14px;
-            color: #555;
-            margin-bottom: 10px;
-            display: block;
-        }
-
-        .amount-input-wrapper {
-            position: relative;
-            display: inline-block;
-            width: 100%;
-        }
-
-        .currency-symbol {
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 28px;
-            font-weight: bold;
-            color: #667eea;
-            pointer-events: none;
-        }
-
-        .amount-input {
-            width: 100%;
-            padding: 18px 60px 18px 20px;
-            font-size: 40px;
-            font-weight: bold;
-            text-align: center;
-            border: 3px solid #e0e0e0;
-            border-radius: 60px;
             background: white;
-            color: #333;
-            transition: all 0.3s ease;
-        }
-
-        .amount-input:focus {
-            outline: none;
-            border-color: #667eea;
-            transform: scale(1.02);
-        }
-
-        /* أزرار سريعة للمبالغ */
-        .quick-amounts {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-
-        .quick-btn {
-            background: white;
-            border: 2px solid #e0e0e0;
-            padding: 8px 18px;
-            border-radius: 40px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            color: #667eea;
-        }
-
-        .quick-btn:hover {
-            background: #667eea;
-            color: white;
-            border-color: #667eea;
-            transform: translateY(-2px);
-        }
-
-        /* طرق الدفع */
-        .payment-methods {
-            margin-bottom: 25px;
-        }
-
-        .section-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .methods-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-            gap: 12px;
-        }
-
-        .method-item {
-            background: white;
-            border: 2px solid #e0e0e0;
             border-radius: 20px;
-            padding: 12px;
+            padding: 30px;
+            width: 400px;
             text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
-
-        .method-item:hover {
-            transform: translateY(-3px);
-            border-color: #667eea;
-        }
-
-        .method-item.selected {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-color: transparent;
-            color: white;
-        }
-
-        .method-item.selected .method-icon {
-            filter: brightness(0) invert(1);
-        }
-
-        .method-icon {
-            font-size: 28px;
-            margin-bottom: 5px;
-        }
-
-        .method-name {
-            font-size: 11px;
-            font-weight: bold;
-        }
-
-        /* زر الدفع */
-        .pay-button {
+        input {
             width: 100%;
-            background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+            padding: 15px;
+            margin: 10px 0;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 18px;
+            text-align: center;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background: #28a745;
             color: white;
             border: none;
-            padding: 18px;
-            border-radius: 60px;
-            font-size: 22px;
+            border-radius: 10px;
+            font-size: 18px;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s ease;
             margin-top: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
         }
-
-        .pay-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(40, 167, 69, 0.4);
+        button:hover {
+            background: #218838;
+            transform: scale(1.02);
         }
-
-        .pay-button:active {
-            transform: translateY(0);
+        .logout {
+            background: #dc3545;
         }
-
-        /* رسائل */
+        .logout:hover {
+            background: #c82333;
+        }
         .message {
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 20px;
-            text-align: center;
-            display: none;
-            animation: slideIn 0.4s ease;
-            font-weight: bold;
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
         }
-
-        .message.show {
-            display: block;
-        }
-
         .error {
-            background: linear-gradient(135deg, #fee 0%, #fdd 100%);
+            background: #fee;
             color: #c33;
-            border-right: 4px solid #c33;
         }
-
         .success {
-            background: linear-gradient(135deg, #efe 0%, #dfd 100%);
-            color: #2e7d32;
-            border-right: 4px solid #2e7d32;
+            background: #efe;
+            color: #3c3;
         }
-
-        .info {
-            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-            color: #1976d2;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
         .loading {
-            opacity: 0.7;
+            opacity: 0.6;
             pointer-events: none;
         }
-
-        @media (max-width: 600px) {
-            .payment-card {
-                padding: 25px;
-            }
-            .amount-input {
-                font-size: 28px;
-                padding: 15px 50px 15px 15px;
-            }
-            .methods-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            h1 {
-                font-size: 22px;
-            }
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .user-info {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="payment-card">
-            <!-- شريط المستخدم -->
-            <div class="user-bar">
-                <div class="user-info">
-                    <div class="user-avatar">👤</div>
-                    <div class="user-details">
-                        <h3 id="usernameDisplay">مرحباً بك</h3>
-                        <p>حساب مميز ⭐</p>
-                    </div>
-                </div>
-                <button class="logout-btn" onclick="logout()">🚪 تسجيل خروج</button>
-            </div>
-
-            <!-- الهيرو -->
-            <div class="hero">
-                <div class="hero-icon">💎</div>
-                <h1>بوابة الدفع</h1>
-                <p class="subtitle">ادفع بكل سهولة وأمان</p>
-            </div>
-
-            <!-- حقل المبلغ -->
-            <div class="amount-section">
-                <span class="amount-label">💰 المبلغ المطلوب</span>
-                <div class="amount-input-wrapper">
-                    <span class="currency-symbol">$</span>
-                    <input type="number" id="amount" class="amount-input" placeholder="0" step="1" min="1">
-                </div>
-                
-                <div class="quick-amounts">
-                    <div class="quick-btn" onclick="setAmount(10)">10$</div>
-                    <div class="quick-btn" onclick="setAmount(25)">25$</div>
-                    <div class="quick-btn" onclick="setAmount(50)">50$</div>
-                    <div class="quick-btn" onclick="setAmount(100)">100$</div>
-                    <div class="quick-btn" onclick="setAmount(250)">250$</div>
-                    <div class="quick-btn" onclick="setAmount(500)">500$</div>
-                </div>
-            </div>
-
-            <!-- طرق الدفع -->
-            <div class="payment-methods">
-                <div class="section-title">
-                    <span>💳</span>
-                    <span>اختر طريقة الدفع</span>
-                </div>
-                <div class="methods-grid">
-                    <div class="method-item selected" data-currency="btc" onclick="selectMethod(this, 'btc')">
-                        <div class="method-icon">₿</div>
-                        <div class="method-name">بيتكوين</div>
-                    </div>
-                    <div class="method-item" data-currency="eth" onclick="selectMethod(this, 'eth')">
-                        <div class="method-icon">Ξ</div>
-                        <div class="method-name">إيثريوم</div>
-                    </div>
-                    <div class="method-item" data-currency="usdttrc20" onclick="selectMethod(this, 'usdttrc20')">
-                        <div class="method-icon">₮</div>
-                        <div class="method-name">USDT</div>
-                    </div>
-                    <div class="method-item" data-currency="ltc" onclick="selectMethod(this, 'ltc')">
-                        <div class="method-icon">Ł</div>
-                        <div class="method-name">لايتكوين</div>
-                    </div>
-                    <div class="method-item" data-currency="doge" onclick="selectMethod(this, 'doge')">
-                        <div class="method-icon">Ð</div>
-                        <div class="method-name">دوجكوين</div>
-                    </div>
-                    <div class="method-item" data-currency="xrp" onclick="selectMethod(this, 'xrp')">
-                        <div class="method-icon">✕</div>
-                        <div class="method-name">ريبل</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- زر الدفع -->
-            <button class="pay-button" onclick="createPayment()">
-                <span>💸</span>
-                <span>إتمام الدفع الآن</span>
-                <span>⚡</span>
-            </button>
-
-            <!-- رسائل -->
-            <div id="message" class="message"></div>
-        </div>
+        <h2>💳 بوابة الدفع</h2>
+        
+        <div class="user-info" id="userInfo"></div>
+        
+        <input type="number" id="amount" placeholder="💰 أدخل المبلغ بالدولار" min="1" step="1">
+        
+        <button onclick="createPayment()">💸 إتمام الدفع</button>
+        <button class="logout" onclick="logout()">🚪 تسجيل خروج</button>
+        
+        <div id="message"></div>
     </div>
 
     <script>
-        // ========== رابط السيرفر ==========
+        // 🔥 غير هذا الرابط إلى الرابط الصحيح من Railway 🔥
         const API_URL = 'https://saker2-production.up.railway.app';
-        let selectedCurrency = 'btc';
         
-        // ========== التحقق من تسجيل الدخول ==========
+        // جرب هذا الرابط إذا الأول ما اشتغل
+        // const API_URL = 'https://your-app-name.up.railway.app';
+        
         const token = localStorage.getItem('token');
         const username = localStorage.getItem('username');
         
+        // التحقق من تسجيل الدخول
         if (!token) {
             window.location.href = 'login.html';
         }
         
-        document.getElementById('usernameDisplay').innerHTML = `👋 مرحباً ${username || 'مستخدم'}`;
+        document.getElementById('userInfo').innerHTML = `
+            👋 مرحباً <strong>${username || 'مستخدم'}</strong>
+        `;
         
-        // ========== تحديد طريقة الدفع ==========
-        function selectMethod(element, currency) {
-            document.querySelectorAll('.method-item').forEach(item => {
-                item.classList.remove('selected');
-            });
-            element.classList.add('selected');
-            selectedCurrency = currency;
-        }
-        
-        // ========== تعيين المبلغ بسرعة ==========
-        function setAmount(value) {
-            document.getElementById('amount').value = value;
-            const input = document.getElementById('amount');
-            input.style.transform = 'scale(1.05)';
-            setTimeout(() => {
-                input.style.transform = 'scale(1)';
-            }, 200);
-        }
-        
-        // ========== إنشاء طلب دفع ==========
         async function createPayment() {
             const amount = document.getElementById('amount').value;
-            const payBtn = document.querySelector('.pay-button');
-            const messageDiv = document.getElementById('message');
+            const msgDiv = document.getElementById('message');
+            const btn = event.target;
             
-            messageDiv.classList.remove('show');
+            // تنظيف الرسائل السابقة
+            msgDiv.innerHTML = '';
             
+            // التحقق من المبلغ
             if (!amount || amount < 1) {
-                showMessage('❌ الرجاء إدخال مبلغ صحيح (أكبر من 0)', 'error');
+                msgDiv.innerHTML = '<div class="message error">❌ الرجاء إدخال مبلغ صحيح</div>';
                 return;
             }
             
-            const originalText = payBtn.innerHTML;
-            payBtn.innerHTML = '⏳ جاري إنشاء طلب الدفع...';
-            payBtn.classList.add('loading');
+            // تعطيل الزر أثناء التحميل
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '⏳ جاري المعالجة...';
+            btn.classList.add('loading');
+            
+            msgDiv.innerHTML = '<div class="message">⏳ جاري الاتصال بالخادم...</div>';
             
             try {
+                console.log('📡 الاتصال بـ:', API_URL);
+                
                 const response = await fetch(`${API_URL}/create-payment`, {
                     method: 'POST',
                     headers: {
@@ -507,65 +149,64 @@
                     },
                     body: JSON.stringify({ 
                         amount: parseFloat(amount),
-                        pay_currency: selectedCurrency
+                        pay_currency: 'btc'
                     })
                 });
                 
-                const data = await response.json();
-                console.log('Response:', data);
+                console.log('✅ تم الاستجابة:', response.status);
                 
-                if (data.success && data.paymentUrl) {
-                    showMessage('✅ تم إنشاء طلب الدفع بنجاح! جاري تحويلك إلى بوابة الدفع...', 'success');
+                const data = await response.json();
+                console.log('📦 البيانات:', data);
+                
+                if (response.ok && data.success && data.paymentUrl) {
+                    msgDiv.innerHTML = '<div class="message success">✅ تم إنشاء طلب الدفع بنجاح! جاري التحويل...</div>';
                     
                     setTimeout(() => {
                         window.open(data.paymentUrl, '_blank');
-                    }, 1500);
-                    
+                    }, 1000);
                 } else {
-                    showMessage('❌ ' + (data.error || 'حدث خطأ أثناء إنشاء طلب الدفع'), 'error');
+                    msgDiv.innerHTML = `<div class="message error">❌ ${data.error || 'حدث خطأ غير متوقع'}</div>`;
                 }
                 
             } catch (error) {
-                console.error('Error:', error);
-                showMessage('❌ فشل الاتصال بالخادم: ' + error.message, 'error');
+                console.error('❌ خطأ:', error);
+                msgDiv.innerHTML = `<div class="message error">
+                    ❌ فشل الاتصال بالخادم<br>
+                    <small>الرابط: ${API_URL}</small><br>
+                    <small>الخطأ: ${error.message}</small>
+                </div>`;
             } finally {
-                setTimeout(() => {
-                    payBtn.innerHTML = originalText;
-                    payBtn.classList.remove('loading');
-                }, 2000);
+                btn.innerHTML = originalText;
+                btn.classList.remove('loading');
             }
         }
         
-        // ========== عرض الرسائل ==========
-        function showMessage(text, type) {
-            const messageDiv = document.getElementById('message');
-            messageDiv.innerHTML = text;
-            messageDiv.className = `message show ${type}`;
-            
-            setTimeout(() => {
-                messageDiv.classList.remove('show');
-            }, 5000);
-        }
-        
-        // ========== تسجيل الخروج ==========
         function logout() {
-            localStorage.removeItem('token');
-            localStorage.removeItem('username');
-            localStorage.removeItem('isLoggedIn');
+            localStorage.clear();
             window.location.href = 'login.html';
         }
         
-        // ========== دعم Enter ==========
-        document.getElementById('amount').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                createPayment();
+        // اختبار الاتصال عند تحميل الصفحة
+        async function testConnection() {
+            try {
+                const response = await fetch(`${API_URL}/`);
+                const data = await response.json();
+                console.log('✅ السيرفر شغال:', data);
+                document.getElementById('message').innerHTML = '<div class="message success">✅ متصل بالخادم</div>';
+                setTimeout(() => {
+                    document.getElementById('message').innerHTML = '';
+                }, 3000);
+            } catch (error) {
+                console.error('❌ السيرفر مو شغال:', error);
+                document.getElementById('message').innerHTML = `<div class="message error">
+                    ⚠️ لا يمكن الاتصال بالخادم<br>
+                    <small>تأكد من الرابط: ${API_URL}</small>
+                </div>`;
             }
-        });
+        }
         
-        // ترحيب
-        setTimeout(() => {
-            showMessage(`✨ مرحباً ${username || 'عزيزي'}! اختر المبلغ وطريقة الدفع المناسبة`, 'info');
-        }, 1000);
+        // اختبار الاتصال بعد ثانية
+        setTimeout(testConnection, 1000);
     </script>
 </body>
 </html>
