@@ -2,11 +2,10 @@
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>صفحة الدفع</title>
     <style>
         body {
-            font-family: 'Tahoma', sans-serif;
+            font-family: Arial, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
@@ -21,76 +20,34 @@
             padding: 30px;
             width: 400px;
             text-align: center;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
-        input {
+        input, button {
             width: 100%;
-            padding: 15px;
+            padding: 12px;
             margin: 10px 0;
-            border: 2px solid #e0e0e0;
             border-radius: 10px;
-            font-size: 18px;
-            text-align: center;
+            font-size: 16px;
         }
         button {
-            width: 100%;
-            padding: 15px;
             background: #28a745;
             color: white;
             border: none;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: bold;
             cursor: pointer;
-            margin-top: 10px;
-        }
-        button:hover {
-            background: #218838;
-            transform: scale(1.02);
         }
         .logout {
             background: #dc3545;
         }
-        .logout:hover {
-            background: #c82333;
-        }
-        .message {
-            margin-top: 15px;
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-        .error {
-            background: #fee;
-            color: #c33;
-        }
-        .success {
-            background: #efe;
-            color: #3c3;
-        }
-        .loading {
-            opacity: 0.6;
-            pointer-events: none;
-        }
-        h2 {
-            color: #333;
-            margin-bottom: 20px;
-        }
-        .user-info {
-            background: #f0f0f0;
-            padding: 10px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
+        .error { color: red; }
+        .success { color: green; }
+        .message { margin-top: 10px; }
     </style>
 </head>
 <body>
     <div class="container">
         <h2>💳 بوابة الدفع</h2>
+        <div id="userInfo"></div>
         
-        <div class="user-info" id="userInfo"></div>
-        
-        <input type="number" id="amount" placeholder="💰 أدخل المبلغ بالدولار" min="1" step="1">
+        <input type="number" id="amount" placeholder="المبلغ بالدولار" min="1">
         
         <button onclick="createPayment()">💸 إتمام الدفع</button>
         <button class="logout" onclick="logout()">🚪 تسجيل خروج</button>
@@ -99,85 +56,61 @@
     </div>
 
     <script>
-        // 🔥 غير هذا الرابط إلى الرابط الصحيح من Railway 🔥
         const API_URL = 'https://saker2-production.up.railway.app';
         
-        // جرب هذا الرابط إذا الأول ما اشتغل
-        // const API_URL = 'https://your-app-name.up.railway.app';
-        
+        // التحقق من التوكن عند تحميل الصفحة
         const token = localStorage.getItem('token');
         const username = localStorage.getItem('username');
         
-        // التحقق من تسجيل الدخول
         if (!token) {
             window.location.href = 'login.html';
         }
         
-        document.getElementById('userInfo').innerHTML = `
-            👋 مرحباً <strong>${username || 'مستخدم'}</strong>
-        `;
+        document.getElementById('userInfo').innerHTML = `👋 مرحباً ${username || 'مستخدم'}`;
         
         async function createPayment() {
             const amount = document.getElementById('amount').value;
             const msgDiv = document.getElementById('message');
             const btn = event.target;
             
-            // تنظيف الرسائل السابقة
-            msgDiv.innerHTML = '';
-            
-            // التحقق من المبلغ
             if (!amount || amount < 1) {
-                msgDiv.innerHTML = '<div class="message error">❌ الرجاء إدخال مبلغ صحيح</div>';
+                msgDiv.innerHTML = '<span class="error">❌ أدخل مبلغ صحيح</span>';
                 return;
             }
             
-            // تعطيل الزر أثناء التحميل
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '⏳ جاري المعالجة...';
-            btn.classList.add('loading');
-            
-            msgDiv.innerHTML = '<div class="message">⏳ جاري الاتصال بالخادم...</div>';
+            msgDiv.innerHTML = '<span>⏳ جاري...</span>';
+            btn.disabled = true;
             
             try {
-                console.log('📡 الاتصال بـ:', API_URL);
-                
                 const response = await fetch(`${API_URL}/create-payment`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
                     },
-                    body: JSON.stringify({ 
-                        amount: parseFloat(amount),
-                        pay_currency: 'btc'
-                    })
+                    body: JSON.stringify({ amount: parseFloat(amount), pay_currency: 'btc' })
                 });
                 
-                console.log('✅ تم الاستجابة:', response.status);
+                // إذا كان التوكن غير صالح
+                if (response.status === 401) {
+                    msgDiv.innerHTML = '<span class="error">⚠️ انتهت صلاحية الجلسة، جاري إعادة التوجيه...</span>';
+                    setTimeout(() => logout(), 2000);
+                    return;
+                }
                 
                 const data = await response.json();
-                console.log('📦 البيانات:', data);
                 
-                if (response.ok && data.success && data.paymentUrl) {
-                    msgDiv.innerHTML = '<div class="message success">✅ تم إنشاء طلب الدفع بنجاح! جاري التحويل...</div>';
-                    
-                    setTimeout(() => {
-                        window.open(data.paymentUrl, '_blank');
-                    }, 1000);
+                if (data.success && data.paymentUrl) {
+                    msgDiv.innerHTML = '<span class="success">✅ تم إنشاء الدفع! جاري التحويل...</span>';
+                    setTimeout(() => window.open(data.paymentUrl, '_blank'), 1000);
                 } else {
-                    msgDiv.innerHTML = `<div class="message error">❌ ${data.error || 'حدث خطأ غير متوقع'}</div>`;
+                    msgDiv.innerHTML = `<span class="error">❌ ${data.error || 'فشل الدفع'}</span>`;
                 }
                 
             } catch (error) {
-                console.error('❌ خطأ:', error);
-                msgDiv.innerHTML = `<div class="message error">
-                    ❌ فشل الاتصال بالخادم<br>
-                    <small>الرابط: ${API_URL}</small><br>
-                    <small>الخطأ: ${error.message}</small>
-                </div>`;
+                msgDiv.innerHTML = `<span class="error">❌ خطأ: ${error.message}</span>`;
             } finally {
-                btn.innerHTML = originalText;
-                btn.classList.remove('loading');
+                btn.disabled = false;
             }
         }
         
@@ -185,28 +118,6 @@
             localStorage.clear();
             window.location.href = 'login.html';
         }
-        
-        // اختبار الاتصال عند تحميل الصفحة
-        async function testConnection() {
-            try {
-                const response = await fetch(`${API_URL}/`);
-                const data = await response.json();
-                console.log('✅ السيرفر شغال:', data);
-                document.getElementById('message').innerHTML = '<div class="message success">✅ متصل بالخادم</div>';
-                setTimeout(() => {
-                    document.getElementById('message').innerHTML = '';
-                }, 3000);
-            } catch (error) {
-                console.error('❌ السيرفر مو شغال:', error);
-                document.getElementById('message').innerHTML = `<div class="message error">
-                    ⚠️ لا يمكن الاتصال بالخادم<br>
-                    <small>تأكد من الرابط: ${API_URL}</small>
-                </div>`;
-            }
-        }
-        
-        // اختبار الاتصال بعد ثانية
-        setTimeout(testConnection, 1000);
     </script>
 </body>
 </html>
