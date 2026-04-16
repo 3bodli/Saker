@@ -17,7 +17,7 @@
         .container {
             background: white;
             border-radius: 20px;
-            padding: 30px;
+            padding: 40px;
             width: 400px;
             text-align: center;
         }
@@ -25,7 +25,7 @@
             width: 100%;
             padding: 12px;
             margin: 10px 0;
-            border-radius: 10px;
+            border-radius: 8px;
             font-size: 16px;
         }
         button {
@@ -39,7 +39,6 @@
         }
         .error { color: red; }
         .success { color: green; }
-        .message { margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -57,8 +56,6 @@
 
     <script>
         const API_URL = 'https://saker2-production.up.railway.app';
-        
-        // التحقق من التوكن عند تحميل الصفحة
         const token = localStorage.getItem('token');
         const username = localStorage.getItem('username');
         
@@ -66,7 +63,7 @@
             window.location.href = 'login.html';
         }
         
-        document.getElementById('userInfo').innerHTML = `👋 مرحباً ${username || 'مستخدم'}`;
+        document.getElementById('userInfo').innerHTML = `<p>👋 مرحباً ${username || 'مستخدم'}</p>`;
         
         async function createPayment() {
             const amount = document.getElementById('amount').value;
@@ -74,11 +71,11 @@
             const btn = event.target;
             
             if (!amount || amount < 1) {
-                msgDiv.innerHTML = '<span class="error">❌ أدخل مبلغ صحيح</span>';
+                msgDiv.innerHTML = '<div class="error">❌ أدخل مبلغ صحيح</div>';
                 return;
             }
             
-            msgDiv.innerHTML = '<span>⏳ جاري...</span>';
+            msgDiv.innerHTML = '<div>⏳ جاري...</div>';
             btn.disabled = true;
             
             try {
@@ -88,27 +85,19 @@
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
                     },
-                    body: JSON.stringify({ amount: parseFloat(amount), pay_currency: 'btc' })
+                    body: JSON.stringify({ amount: parseFloat(amount) })
                 });
-                
-                // إذا كان التوكن غير صالح
-                if (response.status === 401) {
-                    msgDiv.innerHTML = '<span class="error">⚠️ انتهت صلاحية الجلسة، جاري إعادة التوجيه...</span>';
-                    setTimeout(() => logout(), 2000);
-                    return;
-                }
                 
                 const data = await response.json();
                 
-                if (data.success && data.paymentUrl) {
-                    msgDiv.innerHTML = '<span class="success">✅ تم إنشاء الدفع! جاري التحويل...</span>';
+                if (data.success) {
+                    msgDiv.innerHTML = '<div class="success">✅ تم إنشاء الدفع! جاري التحويل...</div>';
                     setTimeout(() => window.open(data.paymentUrl, '_blank'), 1000);
                 } else {
-                    msgDiv.innerHTML = `<span class="error">❌ ${data.error || 'فشل الدفع'}</span>`;
+                    msgDiv.innerHTML = '<div class="error">❌ ' + data.error + '</div>';
                 }
-                
             } catch (error) {
-                msgDiv.innerHTML = `<span class="error">❌ خطأ: ${error.message}</span>`;
+                msgDiv.innerHTML = '<div class="error">❌ خطأ: ' + error.message + '</div>';
             } finally {
                 btn.disabled = false;
             }
