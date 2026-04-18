@@ -2,60 +2,569 @@
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <title>صفحة الدفع</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>بوابة الدفع الأسطورية 💎</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            direction: rtl;
-            padding: 20px;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .container {
+
+        body {
+            font-family: 'Cairo', 'Tahoma', sans-serif;
+            background: linear-gradient(145deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* جسيمات متحركة في الخلفية */
+        body::before {
+            content: '';
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        /* النجوم المتساقطة */
+        @keyframes shootingStar {
+            0% {
+                transform: translateX(0) translateY(0) rotate(45deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(-200px) translateY(200px) rotate(45deg);
+                opacity: 0;
+            }
+        }
+
+        .shooting-star {
+            position: fixed;
+            width: 2px;
+            height: 2px;
             background: white;
-            border-radius: 20px;
-            padding: 40px;
-            width: 400px;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(255,255,255,0.8);
+            animation: shootingStar 3s linear infinite;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 550px;
+            margin: auto;
+            position: relative;
+            z-index: 2;
+            animation: floatIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes floatIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* بطاقة الدفع الرئيسية */
+        .payment-card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 48px;
+            padding: 35px;
+            box-shadow: 
+                0 30px 60px rgba(0,0,0,0.3),
+                0 0 0 1px rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .payment-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+        }
+
+        /* رأس الصفحة */
+        .hero {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .hero-icon {
+            font-size: 80px;
+            animation: pulse 2s ease infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        h1 {
+            font-size: 32px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 15px 0;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* شريط المستخدم */
+        .user-bar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 60px;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: white;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            backdrop-filter: blur(5px);
+        }
+
+        .user-details h3 {
+            font-size: 16px;
+            margin: 0;
+        }
+
+        .user-details p {
+            font-size: 12px;
+            opacity: 0.8;
+            margin: 0;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.05);
+        }
+
+        /* حقل المبلغ */
+        .amount-section {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 30px;
+            padding: 25px;
+            margin-bottom: 25px;
             text-align: center;
         }
-        input, button {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 8px;
-            font-size: 16px;
+
+        .amount-label {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 10px;
+            display: block;
         }
-        button {
-            background: #28a745;
+
+        .amount-input-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .currency-symbol {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 28px;
+            font-weight: bold;
+            color: #667eea;
+            pointer-events: none;
+        }
+
+        .amount-input {
+            width: 100%;
+            padding: 18px 60px 18px 20px;
+            font-size: 40px;
+            font-weight: bold;
+            text-align: center;
+            border: 3px solid #e0e0e0;
+            border-radius: 60px;
+            background: white;
+            color: #333;
+            transition: all 0.3s ease;
+            font-family: monospace;
+        }
+
+        .amount-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+            transform: scale(1.02);
+        }
+
+        /* أزرار سريعة للمبالغ */
+        .quick-amounts {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .quick-btn {
+            background: white;
+            border: 2px solid #e0e0e0;
+            padding: 8px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            color: #667eea;
+        }
+
+        .quick-btn:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        /* خيارات الدفع */
+        .payment-methods {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .methods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 12px;
+        }
+
+        .method-item {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 20px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .method-item:hover {
+            transform: translateY(-3px);
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .method-item.selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: transparent;
+            color: white;
+        }
+
+        .method-item.selected .method-icon {
+            filter: brightness(0) invert(1);
+        }
+
+        .method-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .method-name {
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        /* زر الدفع الأسطوري */
+        .pay-button {
+            width: 100%;
+            background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
             color: white;
             border: none;
+            padding: 18px;
+            border-radius: 60px;
+            font-size: 22px;
+            font-weight: bold;
             cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
         }
-        .logout {
-            background: #dc3545;
+
+        .pay-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
         }
-        .error { color: red; }
-        .success { color: green; }
+
+        .pay-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .pay-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(40, 167, 69, 0.4);
+        }
+
+        .pay-button:active {
+            transform: translateY(0);
+        }
+
+        /* رسائل */
+        .message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 20px;
+            text-align: center;
+            display: none;
+            animation: slideIn 0.4s ease;
+            font-weight: bold;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .error {
+            background: linear-gradient(135deg, #fee 0%, #fdd 100%);
+            color: #c33;
+            border-right: 4px solid #c33;
+        }
+
+        .success {
+            background: linear-gradient(135deg, #efe 0%, #dfd 100%);
+            color: #2e7d32;
+            border-right: 4px solid #2e7d32;
+        }
+
+        .info {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            color: #1976d2;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* تأثير تحميل */
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        /* تنسيق متجاوب */
+        @media (max-width: 600px) {
+            .payment-card {
+                padding: 25px;
+            }
+            
+            .amount-input {
+                font-size: 32px;
+                padding: 15px 50px 15px 15px;
+            }
+            
+            .methods-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .hero-icon {
+                font-size: 60px;
+            }
+        }
+
+        /* شريط التقدم */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #667eea);
+            transition: width 0.3s ease;
+            z-index: 9999;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+        }
+
+        /* تأثيرات إضافية */
+        .glow {
+            animation: glow 2s ease infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 5px rgba(102, 126, 234, 0.5); }
+            50% { text-shadow: 0 0 20px rgba(102, 126, 234, 0.8); }
+        }
     </style>
 </head>
 <body>
+    <div class="progress-bar" id="progressBar"></div>
+    
     <div class="container">
-        <h2>💳 بوابة الدفع</h2>
-        <div id="userInfo"></div>
-        
-        <input type="number" id="amount" placeholder="المبلغ بالدولار" min="1">
-        
-        <button onclick="createPayment()">💸 إتمام الدفع</button>
-        <button class="logout" onclick="logout()">🚪 تسجيل خروج</button>
-        
-        <div id="message"></div>
+        <div class="payment-card">
+            <!-- شريط المستخدم -->
+            <div class="user-bar" id="userBar">
+                <div class="user-info">
+                    <div class="user-avatar">👤</div>
+                    <div class="user-details">
+                        <h3 id="usernameDisplay">مرحباً بك</h3>
+                        <p>حساب مميز ⭐</p>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="logout()">🚪 تسجيل خروج</button>
+            </div>
+
+            <!-- الهيرو -->
+            <div class="hero">
+                <div class="hero-icon glow">💎</div>
+                <h1>بوابة الدفع الأسطورية</h1>
+                <p class="subtitle">ادفع بكل سهولة وأمان مع أحدث طرق الدفع</p>
+            </div>
+
+            <!-- حقل المبلغ -->
+            <div class="amount-section">
+                <span class="amount-label">💰 المبلغ المطلوب</span>
+                <div class="amount-input-wrapper">
+                    <span class="currency-symbol">$</span>
+                    <input type="number" id="amount" class="amount-input" placeholder="0" step="1" min="1">
+                </div>
+                
+                <!-- أزرار سريعة للمبالغ -->
+                <div class="quick-amounts">
+                    <div class="quick-btn" onclick="setAmount(10)">10$</div>
+                    <div class="quick-btn" onclick="setAmount(25)">25$</div>
+                    <div class="quick-btn" onclick="setAmount(50)">50$</div>
+                    <div class="quick-btn" onclick="setAmount(100)">100$</div>
+                    <div class="quick-btn" onclick="setAmount(250)">250$</div>
+                    <div class="quick-btn" onclick="setAmount(500)">500$</div>
+                    <div class="quick-btn" onclick="setAmount(1000)">1000$</div>
+                </div>
+            </div>
+
+            <!-- طرق الدفع -->
+            <div class="payment-methods">
+                <div class="section-title">
+                    <span>💳</span>
+                    <span>اختر طريقة الدفع</span>
+                </div>
+                <div class="methods-grid" id="methodsGrid">
+                    <div class="method-item selected" data-currency="btc" onclick="selectMethod(this, 'btc')">
+                        <div class="method-icon">₿</div>
+                        <div class="method-name">بيتكوين BTC</div>
+                    </div>
+                    <div class="method-item" data-currency="eth" onclick="selectMethod(this, 'eth')">
+                        <div class="method-icon">Ξ</div>
+                        <div class="method-name">إيثريوم ETH</div>
+                    </div>
+                    <div class="method-item" data-currency="usdttrc20" onclick="selectMethod(this, 'usdttrc20')">
+                        <div class="method-icon">₮</div>
+                        <div class="method-name">USDT (TRC20)</div>
+                    </div>
+                    <div class="method-item" data-currency="ltc" onclick="selectMethod(this, 'ltc')">
+                        <div class="method-icon">Ł</div>
+                        <div class="method-name">لايتكوين LTC</div>
+                    </div>
+                    <div class="method-item" data-currency="doge" onclick="selectMethod(this, 'doge')">
+                        <div class="method-icon">Ð</div>
+                        <div class="method-name">دوجكوين DOGE</div>
+                    </div>
+                    <div class="method-item" data-currency="xrp" onclick="selectMethod(this, 'xrp')">
+                        <div class="method-icon">✕</div>
+                        <div class="method-name">ريبل XRP</div>
+                    </div>
+                    <div class="method-item" data-currency="trx" onclick="selectMethod(this, 'trx')">
+                        <div class="method-icon">T</div>
+                        <div class="method-name">ترون TRX</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- زر الدفع الأسطوري -->
+            <button class="pay-button" onclick="createPayment()">
+                <span>💸</span>
+                <span>إتمام الدفع الآن</span>
+                <span>⚡</span>
+            </button>
+
+            <!-- رسائل -->
+            <div id="message" class="message"></div>
+        </div>
     </div>
 
     <script>
+        // ========== إعدادات ==========
         const API_URL = 'https://saker2-production.up.railway.app';
+        let selectedCurrency = 'btc';
+        
+        // ========== التحقق من تسجيل الدخول ==========
         const token = localStorage.getItem('token');
         const username = localStorage.getItem('username');
         
@@ -63,20 +572,58 @@
             window.location.href = 'login.html';
         }
         
-        document.getElementById('userInfo').innerHTML = `<p>👋 مرحباً ${username || 'مستخدم'}</p>`;
+        document.getElementById('usernameDisplay').innerHTML = `👋 مرحباً ${username || 'مستخدم'}`;
         
+        // ========== شريط التقدم عند التمرير ==========
+        window.addEventListener('scroll', () => {
+            const winScroll = document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+        });
+        
+        // ========== تحديد طريقة الدفع ==========
+        function selectMethod(element, currency) {
+            document.querySelectorAll('.method-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            selectedCurrency = currency;
+        }
+        
+        // ========== تعيين المبلغ بسرعة ==========
+        function setAmount(value) {
+            document.getElementById('amount').value = value;
+            const input = document.getElementById('amount');
+            input.style.transform = 'scale(1.05)';
+            setTimeout(() => {
+                input.style.transform = 'scale(1)';
+            }, 200);
+        }
+        
+        // ========== إنشاء طلب دفع ==========
         async function createPayment() {
             const amount = document.getElementById('amount').value;
-            const msgDiv = document.getElementById('message');
-            const btn = event.target;
+            const payBtn = document.querySelector('.pay-button');
+            const messageDiv = document.getElementById('message');
+            
+            messageDiv.classList.remove('show');
             
             if (!amount || amount < 1) {
-                msgDiv.innerHTML = '<div class="error">❌ أدخل مبلغ صحيح</div>';
+                showMessage('❌ الرجاء إدخال مبلغ صحيح (أكبر من 0)', 'error');
                 return;
             }
             
-            msgDiv.innerHTML = '<div>⏳ جاري...</div>';
-            btn.disabled = true;
+            if (amount > 100000) {
+                showMessage('⚠️ المبلغ كبير جداً. الحد الأقصى هو 100,000 دولار', 'error');
+                return;
+            }
+            
+            const originalText = payBtn.innerHTML;
+            payBtn.innerHTML = '<span>⏳</span><span>جاري إنشاء طلب الدفع...</span><span>🔄</span>';
+            payBtn.classList.add('loading');
+            
+            updateProgressBar(30);
             
             try {
                 const response = await fetch(`${API_URL}/create-payment`, {
@@ -85,28 +632,176 @@
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
                     },
-                    body: JSON.stringify({ amount: parseFloat(amount) })
+                    body: JSON.stringify({ 
+                        amount: parseFloat(amount),
+                        pay_currency: selectedCurrency
+                    })
                 });
                 
+                updateProgressBar(70);
                 const data = await response.json();
+                updateProgressBar(100);
                 
-                if (data.success) {
-                    msgDiv.innerHTML = '<div class="success">✅ تم إنشاء الدفع! جاري التحويل...</div>';
-                    setTimeout(() => window.open(data.paymentUrl, '_blank'), 1000);
+                if (data.success && data.paymentUrl) {
+                    showMessage('✅ تم إنشاء طلب الدفع بنجاح! جاري تحويلك إلى بوابة الدفع...', 'success');
+                    
+                    // تأثير احتفالي
+                    celebrate();
+                    
+                    setTimeout(() => {
+                        window.open(data.paymentUrl, '_blank');
+                    }, 1500);
+                    
+                    // تسجيل عملية الدفع
+                    savePaymentToHistory(amount, selectedCurrency);
+                    
                 } else {
-                    msgDiv.innerHTML = '<div class="error">❌ ' + data.error + '</div>';
+                    showMessage('❌ ' + (data.error || 'حدث خطأ أثناء إنشاء طلب الدفع'), 'error');
                 }
+                
             } catch (error) {
-                msgDiv.innerHTML = '<div class="error">❌ خطأ: ' + error.message + '</div>';
+                console.error('Error:', error);
+                showMessage('❌ فشل الاتصال بالخادم: ' + error.message, 'error');
             } finally {
-                btn.disabled = false;
+                setTimeout(() => {
+                    payBtn.innerHTML = originalText;
+                    payBtn.classList.remove('loading');
+                    updateProgressBar(0);
+                }, 2000);
             }
         }
         
+        // ========== حفظ سجل الدفع ==========
+        function savePaymentToHistory(amount, currency) {
+            let history = JSON.parse(localStorage.getItem('paymentHistory') || '[]');
+            history.unshift({
+                amount: amount,
+                currency: currency,
+                date: new Date().toLocaleString('ar-EG'),
+                status: 'pending'
+            });
+            if (history.length > 20) history.pop();
+            localStorage.setItem('paymentHistory', JSON.stringify(history));
+        }
+        
+        // ========== عرض الرسائل ==========
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.innerHTML = text;
+            messageDiv.className = `message show ${type}`;
+            
+            setTimeout(() => {
+                if (messageDiv.classList.contains('show')) {
+                    messageDiv.classList.remove('show');
+                }
+            }, 5000);
+        }
+        
+        // ========== تحديث شريط التقدم ==========
+        function updateProgressBar(percent) {
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = percent + '%';
+            if (percent === 100) {
+                setTimeout(() => {
+                    progressBar.style.width = '0%';
+                }, 1000);
+            }
+        }
+        
+        // ========== تأثير احتفالي ==========
+        function celebrate() {
+            for (let i = 0; i < 30; i++) {
+                createParticle();
+            }
+            
+            const btn = document.querySelector('.pay-button');
+            btn.style.background = 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)';
+            setTimeout(() => {
+                btn.style.background = 'linear-gradient(135deg, #28a745 0%, #1e7e34 100%)';
+            }, 1000);
+        }
+        
+        // ========== إنشاء جسيمات ==========
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.innerHTML = ['💰', '💎', '✨', '⭐', '💵', '🪙'][Math.floor(Math.random() * 6)];
+            particle.style.position = 'fixed';
+            particle.style.left = Math.random() * window.innerWidth + 'px';
+            particle.style.top = window.innerHeight - 100 + 'px';
+            particle.style.fontSize = (Math.random() * 20 + 15) + 'px';
+            particle.style.pointerEvents = 'none';
+            particle.style.zIndex = '9999';
+            particle.style.animation = 'floatUp 1s ease-out forwards';
+            document.body.appendChild(particle);
+            
+            setTimeout(() => {
+                particle.remove();
+            }, 1000);
+        }
+        
+        // إضافة تأثير الطفو
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes floatUp {
+                0% {
+                    opacity: 1;
+                    transform: translateY(0) rotate(0deg);
+                }
+                100% {
+                    opacity: 0;
+                    transform: translateY(-200px) rotate(360deg);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // ========== تسجيل الخروج ==========
         function logout() {
-            localStorage.clear();
+            localStorage.removeItem('token');
+            localStorage.removeItem('username');
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('loginTime');
             window.location.href = 'login.html';
         }
+        
+        // ========== إنشاء نجوم متساقطة ==========
+        function createShootingStars() {
+            for (let i = 0; i < 5; i++) {
+                const star = document.createElement('div');
+                star.className = 'shooting-star';
+                star.style.top = Math.random() * window.innerHeight + 'px';
+                star.style.left = Math.random() * window.innerWidth + 'px';
+                star.style.animationDelay = Math.random() * 5 + 's';
+                document.body.appendChild(star);
+                
+                setTimeout(() => {
+                    star.remove();
+                }, 3000);
+            }
+        }
+        
+        setInterval(createShootingStars, 8000);
+        
+        // ========== دعم Enter ==========
+        document.getElementById('amount').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                createPayment();
+            }
+        });
+        
+        // ========== تأثيرات إضافية ==========
+        const amountInput = document.getElementById('amount');
+        amountInput.addEventListener('focus', () => {
+            amountInput.style.transform = 'scale(1.02)';
+        });
+        amountInput.addEventListener('blur', () => {
+            amountInput.style.transform = 'scale(1)';
+        });
+        
+        // ترحيب
+        setTimeout(() => {
+            showMessage(`✨ مرحباً ${username || 'عزيزي'}! اختر المبلغ وطريقة الدفع المناسبة`, 'info');
+        }, 1000);
     </script>
 </body>
 </html>
