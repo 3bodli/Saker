@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - المشرف</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Tahoma', sans-serif;
+            background: #1a1a2e;
+            padding: 20px;
+            direction: rtl;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .transfers-list {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: #667eea;
+            color: white;
+        }
+        .accept-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 2px;
+        }
+        .reject-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 2px;
+        }
+        .status-pending {
+            background: #ffc107;
+            color: #333;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        .status-accepted {
+            background: #28a745;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        .status-rejected {
+            background: #dc3545;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>👑 لوحة تحكم المشرف</h2>
+            <button class="logout-btn" onclick="logout()">🚪 خروج</button>
+        </div>
+        
+        <div class="stats" id="stats"></div>
+        
+        <div class="transfers-list">
+            <h3>📋 طلبات التحويل</h3>
+            <table id="transfersTable">
+                <thead>
+                    <tr><th>ID</th><th>المرسل</th><th>المبلغ</th><th>المبلغ النهائي</th><th>ملاحظة</th><th>الحالة</th><th>الإجراء</th></tr>
+                </thead>
+                <tbody id="transfersBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://saker2-production.up.railway.app';
+        const token = localStorage.getItem('token');
+        const role = localStorage.getItem('role');
+        
+        if (!token || role !== 'admin') {
+            window.location.href = 'login.html';
+        }
+        
+        async function loadTransfers() {
+            const response = await fetch(`${API_URL}/api/admin/transfers`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const data = await response.json();
+            
+            if (data.success) {
+                const transfers = data.transfers;
+                const tbody = document.getElementById('transfersBody');
+                tbody.innerHTML = '';
+                
+                // إحصائيات
+                const pending = transfers.filter(t => t.status === 'pending').length;
+                const accepted = transfers.filter(t => t.status === 'accepted').length;
+                const rejected = transfers.filter(t => t.status === 'rejected').length;
+                const totalAmount = transfers.reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
+                
+                document.getElementById('stats').innerHTML = `
+                    <div class="stat-card"><div class="stat-number">${transfers.length}</div><div>إجمالي الطلبات</div></div>
+                    <div class="stat-card"><div class="stat-number">${pending}</div><div>قيد الانتظار</div></div>
+                    <div class="stat-card"><div class="stat-number">${accepted}</div><div>مقبولة</div></div>
+                    <div class="stat-card"><div class="stat-number">${totalAmount}</div><div>إجمالي المبالغ ($)</div></div>
+                `;
+                
+                transfers.forEach(transfer => {
+                    const row = tbody.insertRow();
+                    row.insertCell(0).innerHTML = transfer.id;
+                    row.insertCell(1).innerHTML = transfer.senderName || transfer.companyName || '-';
+                    row.insertCell(2).innerHTML = transfer.amount;
+                    row.insertCell(3).innerHTML = transfer.finalAmount;
+                    row.insertCell(4).innerHTML = transfer.note || '-';
+                    row.insertCell(5).innerHTML = `<span class="status-${transfer.status}">${transfer.status === 'pending' ? 'قيد الانتظار' : transfer.status === 'accepted' ? 'مقبول ✅' : 'مرفوض ❌'}</span>`;
+                    
+                    const actions = row.insertCell(6);
+                    if (transfer.status === 'pending') {
+                        actions.innerHTML = `
+                            <button class="accept-btn" onclick="updateStatus('${transfer.id}', 'accepted')">قبول</button>
+                            <button class="reject-btn" onclick="updateStatus('${transfer.id}', 'rejected')">رفض</button>
+                        `;
+                    } else {
+                        actions.innerHTML = '-';
+                    }
+                });
+            }
+        }
+        
+        async function updateStatus(id, status) {
+            const response = await fetch(`${API_URL}/api/admin/update-transfer/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ status })
+            });
+            const data = await response.json();
+            if (data.success) {
+                alert(data.message);
+                loadTransfers();
+            }
+        }
+        
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'login.html';
+        }
+        
+        loadTransfers();
+        setInterval(loadTransfers, 5000); // تحديث كل 5 ثواني
+    </script>
+</body>
+</html>
