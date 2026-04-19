@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الدفع - بوابة التحويلات</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Tahoma', sans-serif;
+            background: linear-gradient(145deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 450px;
+            width: 100%;
+        }
+        .card {
+            background: white;
+            border-radius: 40px;
+            padding: 35px;
+            text-align: center;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+        }
+        .back-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+        .amount-info {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 30px;
+            margin: 20px 0;
+        }
+        .amount-number {
+            font-size: 48px;
+            font-weight: bold;
+        }
+        button {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+            color: white;
+            border: none;
+            border-radius: 40px;
+            font-size: 22px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .message {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 15px;
+        }
+        .error { background: #fee; color: #c33; }
+        .success { background: #efe; color: #2e7d32; }
+        .loading { opacity: 0.6; pointer-events: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <button class="back-btn" onclick="window.location.href='dashboard.html'">← رجوع</button>
+            
+            <h2>💳 إتمام الدفع</h2>
+            
+            <div class="amount-info">
+                <div>المبلغ المراد دفعه</div>
+                <div class="amount-number" id="amountDisplay">$0</div>
+                <div style="margin-top: 10px;" id="finalNote"></div>
+            </div>
+            
+            <p>سيتم تحويلك إلى بوابة الدفع الآمنة لإتمام العملية</p>
+            
+            <button onclick="processPayment()">💸 ادفع الآن</button>
+            <div id="message"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://saker2-production.up.railway.app';
+        const token = localStorage.getItem('token');
+        const amount = localStorage.getItem('currentAmount');
+        const finalAmount = localStorage.getItem('finalAmount');
+        
+        if (!token) {
+            window.location.href = 'login.html';
+        }
+        
+        if (!amount) {
+            window.location.href = 'dashboard.html';
+        }
+        
+        document.getElementById('amountDisplay').innerHTML = `$${amount}`;
+        
+        if (finalAmount) {
+            document.getElementById('finalNote').innerHTML = `(سيتم استلام $${finalAmount} بعد الخصم)`;
+        }
+        
+        async function processPayment() {
+            const btn = event.target;
+            const msgDiv = document.getElementById('message');
+            
+            btn.innerHTML = '⏳ جاري...';
+            btn.classList.add('loading');
+            
+            try {
+                const response = await fetch(`${API_URL}/api/create-payment`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ amount: parseFloat(amount) })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success && data.paymentUrl) {
+                    msgDiv.innerHTML = '<div class="message success">✅ تم إنشاء الدفع! جاري التحويل...</div>';
+                    
+                    localStorage.removeItem('currentTransferId');
+                    localStorage.removeItem('currentAmount');
+                    localStorage.removeItem('finalAmount');
+                    
+                    setTimeout(() => {
+                        window.open(data.paymentUrl, '_blank');
+                        window.location.href = 'dashboard.html';
+                    }, 2000);
+                } else {
+                    msgDiv.innerHTML = `<div class="message error">❌ ${data.error || 'فشل إنشاء الدفع'}</div>`;
+                    btn.innerHTML = '💸 ادفع الآن';
+                    btn.classList.remove('loading');
+                }
+            } catch (error) {
+                msgDiv.innerHTML = '<div class="message error">❌ فشل الاتصال بالخادم</div>';
+                btn.innerHTML = '💸 ادفع الآن';
+                btn.classList.remove('loading');
+            }
+        }
+    </script>
+</body>
+</html>
