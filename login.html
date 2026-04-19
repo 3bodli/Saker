@@ -145,7 +145,7 @@
                     localStorage.setItem('username', data.username);
                     msgDiv.innerHTML = '<div class="success">✅ تم تسجيل الدخول! جاري التحويل...</div>';
                     setTimeout(() => {
-                        window.location.href = 'payment.html';
+                        window.location.href = 'dashboard.html';
                     }, 1000);
                 } else {
                     msgDiv.innerHTML = '<div class="error">❌ ' + data.error + '</div>';
@@ -196,7 +196,7 @@
         
         // إذا كان مسجل دخول مسبقاً
         if (localStorage.getItem('token')) {
-            window.location.href = 'payment.html';
+            window.location.href = 'dashboard.html';
         }
     </script>
 </body>
