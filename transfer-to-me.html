@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحويل لي - بوابة التحويلات</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Tahoma', sans-serif;
+            background: linear-gradient(145deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+        }
+        .card {
+            background: white;
+            border-radius: 40px;
+            padding: 30px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+        }
+        .back-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 2px solid #e0e0e0;
+            border-radius: 20px;
+            font-size: 16px;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 20px;
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #1976d2;
+        }
+        .message {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        .error { background: #fee; color: #c33; }
+        .success { background: #efe; color: #2e7d32; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <button class="back-btn" onclick="window.location.href='dashboard.html'">← رجوع</button>
+            <h2>💰 تحويل لي</h2>
+            
+            <input type="text" id="senderName" placeholder="اسم المرسل">
+            <textarea id="note" rows="3" placeholder="ملاحظة (اختياري)"></textarea>
+            <input type="number" id="amount" placeholder="المبلغ بالدولار" step="1" min="1">
+            
+            <div class="info">
+                ⚡ ملاحظة: سيتم خصم 7% رسوم خدمة<br>
+                المبلغ الذي ستستلمه سيكون أقل بنسبة 7%
+            </div>
+            
+            <button onclick="createTransfer()">📤 متابعة إلى الدفع</button>
+            <div id="message"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://saker2-production.up.railway.app';
+        const token = localStorage.getItem('token');
+        
+        if (!token) {
+            window.location.href = 'login.html';
+        }
+        
+        async function createTransfer() {
+            const senderName = document.getElementById('senderName').value;
+            const note = document.getElementById('note').value;
+            const amount = document.getElementById('amount').value;
+            const msgDiv = document.getElementById('message');
+            
+            if (!senderName || !amount || amount < 1) {
+                msgDiv.innerHTML = '<div class="message error">❌ أدخل جميع البيانات</div>';
+                return;
+            }
+            
+            msgDiv.innerHTML = '<div class="message">⏳ جاري إنشاء الطلب...</div>';
+            
+            try {
+                const response = await fetch(`${API_URL}/api/create-transfer`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ senderName, note, amount: parseFloat(amount) })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    localStorage.setItem('currentTransferId', data.transferId);
+                    localStorage.setItem('currentAmount', amount);
+                    localStorage.setItem('finalAmount', data.finalAmount);
+                    window.location.href = 'payment.html';
+                } else {
+                    msgDiv.innerHTML = `<div class="message error">❌ ${data.error}</div>`;
+                }
+            } catch (error) {
+                msgDiv.innerHTML = '<div class="message error">❌ فشل الاتصال بالخادم</div>';
+            }
+        }
+    </script>
+</body>
+</html>
