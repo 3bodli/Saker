@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل الدخول</title>
+    <title>تسجيل الدخول - بوابة التحويلات</title>
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Tahoma', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
@@ -18,117 +19,124 @@
         .container {
             background: white;
             border-radius: 20px;
-            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             width: 400px;
-            text-align: center;
+            padding: 40px;
         }
+        .icon { text-align: center; font-size: 60px; margin-bottom: 20px; }
+        h2 { text-align: center; color: #333; margin-bottom: 30px; }
+        .tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #eee;
+        }
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #999;
+            transition: 0.3s;
+        }
+        .tab.active {
+            color: #667eea;
+            border-bottom: 2px solid #667eea;
+        }
+        .form { display: none; }
+        .form.active { display: block; }
         input {
             width: 100%;
             padding: 12px;
             margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
             font-size: 16px;
         }
+        input:focus { outline: none; border-color: #667eea; }
         button {
             width: 100%;
             padding: 12px;
             background: #667eea;
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 18px;
+            font-weight: bold;
             cursor: pointer;
-            margin-top: 10px;
+            margin-top: 20px;
         }
-        button:hover {
-            background: #5a67d8;
-        }
-        .error {
-            color: red;
-            margin-top: 10px;
-        }
-        .success {
-            color: green;
-            margin-top: 10px;
-        }
-        .tab {
-            display: flex;
-            margin-bottom: 20px;
-        }
-        .tab-btn {
-            flex: 1;
+        button:hover { background: #5a67d8; }
+        .message {
+            margin-top: 15px;
             padding: 10px;
-            cursor: pointer;
-            background: #f0f0f0;
-            border: none;
-            margin: 0 5px;
             border-radius: 8px;
-        }
-        .tab-btn.active {
-            background: #667eea;
-            color: white;
-        }
-        .form {
+            text-align: center;
+            font-size: 14px;
             display: none;
         }
-        .form.active {
-            display: block;
-        }
+        .message.show { display: block; }
+        .error { background: #fee; color: #c33; }
+        .success { background: #efe; color: #3c3; }
+        .loading { opacity: 0.6; pointer-events: none; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>💳 بوابة الدفع</h2>
+        <div class="icon">💳</div>
+        <h2>بوابة التحويلات</h2>
         
-        <div class="tab">
-            <button class="tab-btn active" onclick="showTab('login')">تسجيل دخول</button>
-            <button class="tab-btn" onclick="showTab('register')">حساب جديد</button>
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('login')">تسجيل دخول</div>
+            <div class="tab" onclick="switchTab('register')">حساب جديد</div>
         </div>
-        
+
         <div id="loginForm" class="form active">
             <input type="text" id="loginUsername" placeholder="اسم المستخدم">
             <input type="password" id="loginPassword" placeholder="كلمة المرور">
             <button onclick="login()">دخول</button>
-            <div id="loginMessage"></div>
+            <div id="loginMessage" class="message"></div>
         </div>
-        
+
         <div id="registerForm" class="form">
             <input type="text" id="regUsername" placeholder="اسم المستخدم">
             <input type="password" id="regPassword" placeholder="كلمة المرور">
             <input type="password" id="regConfirm" placeholder="تأكيد كلمة المرور">
             <button onclick="register()">إنشاء حساب</button>
-            <div id="registerMessage"></div>
+            <div id="registerMessage" class="message"></div>
         </div>
     </div>
 
     <script>
         const API_URL = 'https://saker2-production.up.railway.app';
         
-        function showTab(tab) {
+        function switchTab(tab) {
             document.querySelectorAll('.form').forEach(f => f.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             
             if (tab === 'login') {
                 document.getElementById('loginForm').classList.add('active');
-                document.querySelectorAll('.tab-btn')[0].classList.add('active');
+                document.querySelector('.tab').classList.add('active');
             } else {
                 document.getElementById('registerForm').classList.add('active');
-                document.querySelectorAll('.tab-btn')[1].classList.add('active');
+                document.querySelectorAll('.tab')[1].classList.add('active');
             }
         }
         
         async function login() {
-            const username = document.getElementById('loginUsername').value;
+            const username = document.getElementById('loginUsername').value.trim();
             const password = document.getElementById('loginPassword').value;
             const msgDiv = document.getElementById('loginMessage');
+            const btn = event.target;
             
             if (!username || !password) {
-                msgDiv.innerHTML = '<div class="error">❌ أدخل جميع البيانات</div>';
+                showMessage(msgDiv, '❌ الرجاء إدخال جميع البيانات', 'error');
                 return;
             }
             
-            msgDiv.innerHTML = '<div>⏳ جاري...</div>';
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '⏳ جاري...';
+            btn.classList.add('loading');
             
             try {
                 const response = await fetch(`${API_URL}/api/login`, {
@@ -138,40 +146,47 @@
                 });
                 
                 const data = await response.json();
-                console.log('Response:', data);
                 
                 if (data.success) {
                     localStorage.setItem('token', data.token);
                     localStorage.setItem('username', data.username);
-                    msgDiv.innerHTML = '<div class="success">✅ تم تسجيل الدخول! جاري التحويل...</div>';
+                    localStorage.setItem('role', data.role);
+                    
+                    showMessage(msgDiv, '✅ تم تسجيل الدخول... جاري التحويل', 'success');
                     setTimeout(() => {
                         window.location.href = 'dashboard.html';
                     }, 1000);
                 } else {
-                    msgDiv.innerHTML = '<div class="error">❌ ' + data.error + '</div>';
+                    showMessage(msgDiv, '❌ ' + data.error, 'error');
                 }
             } catch (error) {
-                msgDiv.innerHTML = '<div class="error">❌ خطأ: ' + error.message + '</div>';
+                showMessage(msgDiv, '❌ خطأ في الاتصال', 'error');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.classList.remove('loading');
             }
         }
         
         async function register() {
-            const username = document.getElementById('regUsername').value;
+            const username = document.getElementById('regUsername').value.trim();
             const password = document.getElementById('regPassword').value;
             const confirm = document.getElementById('regConfirm').value;
             const msgDiv = document.getElementById('registerMessage');
+            const btn = event.target;
             
             if (!username || !password) {
-                msgDiv.innerHTML = '<div class="error">❌ أدخل جميع البيانات</div>';
+                showMessage(msgDiv, '❌ الرجاء إدخال جميع البيانات', 'error');
                 return;
             }
             
             if (password !== confirm) {
-                msgDiv.innerHTML = '<div class="error">❌ كلمة المرور غير متطابقة</div>';
+                showMessage(msgDiv, '❌ كلمة المرور غير متطابقة', 'error');
                 return;
             }
             
-            msgDiv.innerHTML = '<div>⏳ جاري...</div>';
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '⏳ جاري...';
+            btn.classList.add('loading');
             
             try {
                 const response = await fetch(`${API_URL}/api/register`, {
@@ -181,20 +196,29 @@
                 });
                 
                 const data = await response.json();
-                console.log('Response:', data);
                 
                 if (data.success) {
-                    msgDiv.innerHTML = '<div class="success">✅ ' + data.message + '</div>';
-                    setTimeout(() => showTab('login'), 1500);
+                    showMessage(msgDiv, '✅ ' + data.message, 'success');
+                    setTimeout(() => switchTab('login'), 1500);
                 } else {
-                    msgDiv.innerHTML = '<div class="error">❌ ' + data.error + '</div>';
+                    showMessage(msgDiv, '❌ ' + data.error, 'error');
                 }
             } catch (error) {
-                msgDiv.innerHTML = '<div class="error">❌ خطأ: ' + error.message + '</div>';
+                showMessage(msgDiv, '❌ خطأ في الاتصال', 'error');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.classList.remove('loading');
             }
         }
         
-        // إذا كان مسجل دخول مسبقاً
+        function showMessage(element, text, type) {
+            element.innerHTML = text;
+            element.className = `message show ${type}`;
+            setTimeout(() => {
+                element.classList.remove('show');
+            }, 3000);
+        }
+        
         if (localStorage.getItem('token')) {
             window.location.href = 'dashboard.html';
         }
